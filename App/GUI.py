@@ -74,7 +74,7 @@ def run():
     stream = QTextStream(file)
     app.setStyleSheet(stream.readAll())
 
-    MainWindow = QMainWindow()
+    MainWindow = QWidget()
     Ui_MainWindow(MainWindow, app)
     MainWindow.showMaximized()
     # MainWindow.showFullScreen()
