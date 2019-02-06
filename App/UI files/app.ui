@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1051</width>
+    <height>910</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QFrame" name="frame">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1051</width>
+      <height>861</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QStackedWidget" name="stackedWidget">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>1031</width>
+       <height>831</height>
+      </rect>
+     </property>
+     <widget class="QWidget" name="title_page">
+      <widget class="QWidget" name="verticalLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>290</x>
+         <y>230</y>
+         <width>501</width>
+         <height>401</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QGraphicsView" name="logo"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_2"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="pairing_page">
+      <widget class="QWidget" name="verticalLayoutWidget_2">
+       <property name="geometry">
+        <rect>
+         <x>300</x>
+         <y>200</y>
+         <width>501</width>
+         <height>401</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QGraphicsView" name="logo_3"/>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lineEdit_6"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QLineEdit" name="version">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>830</y>
+       <width>113</width>
+       <height>27</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1051</width>
+     <height>25</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
