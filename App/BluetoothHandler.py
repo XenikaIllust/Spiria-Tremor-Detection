@@ -71,10 +71,7 @@ if __name__ == "__main__":
     bt_handler = BluetoothHandler()
     status = bt_handler.pairing()
     print(status)
-<<<<<<< HEAD
     started = bt_handler.startTest()
     print(started)
-=======
-    #started = bt_handler.startTest()
-    #print(started)
->>>>>>> 3fba128db826623746c5252dd76b6b69027d6726
+    started = bt_handler.startTest()
+    print(started)
