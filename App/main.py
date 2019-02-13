@@ -1,3 +1,5 @@
+#! /usr/bin/python3
+
 from PyQt5.QtCore import QFile, QRect, QTextStream
 from PyQt5.QtWidgets import QApplication
 from GUI import *
@@ -8,13 +10,14 @@ class Spiria_App(QWidget):
         self.ui = Ui_MainWindow()
         self.setGeometry(QApplication.desktop().screenGeometry())
         self.ui.setup_ui(self)
+        self.state = StateMachine()
 
         self.ui.exit_button.clicked.connect(self.close)
-        self.ui.next_button.clicked.connect(self.flip_page)
+        self.ui.next_button.clicked.connect(self.debug_flip_page)
 
-    def flip_page(self):
+    def debug_flip_page(self):
         current = self.ui.stacked_widget.currentIndex()
-        self.ui.stacked_widget.setCurrentIndex(current + 1)
+        self.ui.set_screen(current + 1)
 
 
 def run():
