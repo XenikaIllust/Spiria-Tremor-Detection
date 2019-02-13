@@ -20,9 +20,12 @@ class BluetoothHandler:
         paired = False
         timeout = False
         curr_time = int(time.time())
+        print(curr_time)
+        
         while paired == False or timeout:
+            print(int(time.time()))
             # timeout after 5 seconds
-            if int(time.time()) == curr_time + 5:
+            if int(time.time()) == (curr_time + 5):
                 timeout = True
 
             self.sendData("spairing")
@@ -33,7 +36,7 @@ class BluetoothHandler:
             time.sleep(0.001)
 
         if paired == True:
-            return False
+            return True
 
         if timeout == True:
             return False
