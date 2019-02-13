@@ -6,6 +6,7 @@ class BluetoothHandler:
     def __init__(self):
         self.addr = "98:D3:31:FD:8B:99"
         self.socket = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
+        self.socket.setblocking(False)
         self.port = 1
         self.socket.connect((self.addr, self.port))
 
@@ -23,7 +24,7 @@ class BluetoothHandler:
         curr_time = int(time.time())
         print(curr_time)
         
-        while paired == False or timeout:
+        while paired == False or timeout == False:
             print(int(time.time()))
             # timeout after 5 seconds
             if int(time.time()) == (curr_time + 5):
@@ -48,9 +49,9 @@ class BluetoothHandler:
         timeout = False
         curr_time = int(time.time())
 
-        while started == False or timeout:
+        while started == False or timeout == False:
             # timeout after 5 seconds
-            if int(time.time()) == curr_time + 5:
+            if int(time.time()) >= (curr_time + 5):
                 timeout = True
                 
             self.sendData("startnow")
@@ -70,8 +71,5 @@ if __name__ == "__main__":
     bt_handler = BluetoothHandler()
     status = bt_handler.pairing()
     print(status)
-<<<<<<< HEAD
     started = bt_handler.startTest()
     print(started)
-=======
->>>>>>> 52f6260792bbb1b0484475d90243d363aebf90f8
