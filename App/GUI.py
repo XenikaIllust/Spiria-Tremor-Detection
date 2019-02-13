@@ -1,5 +1,3 @@
-#! /usr/bin/python3
-
 from PyQt5.QtCore import QRect, Qt
 from PyQt5.QtWidgets import QApplication, QFrame, QWidget, QStackedWidget, QHBoxLayout, QVBoxLayout, QGraphicsView, QLineEdit, QPushButton
 from PyQt5.QtTest import QTest

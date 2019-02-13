@@ -1,5 +1,3 @@
-#! /usr/bin/python3
-
 from GUI import *
 from UART_Talker import *
 from Request_Handler import *

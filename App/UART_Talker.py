@@ -1,5 +1,3 @@
-#! /usr/bin/python3
-
 import serial
 
 class UART_Talker():
