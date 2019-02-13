@@ -105,6 +105,11 @@ class Ui_MainWindow(object):
         subtitle.setReadOnly(True)
         layout.addWidget(subtitle)
 
+        start_button = QPushButton(layout_widget)
+        start_button.setObjectName("start button")
+        start_button.setText("Begin")
+        layout.addWidget(start_button)
+
         layout_widget.setLayout(layout)
 
     def setup_pairing_screen(self):

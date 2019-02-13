@@ -1,5 +1,6 @@
 import bluetooth
 import time
+import re
 
 class BluetoothHandler:
     def __init__(self):
@@ -38,7 +39,33 @@ class BluetoothHandler:
         if timeout == True:
             return False
 
+    def startTest(self):
+        started = False
+        result_ready = False
+        timeout = False
+        curr_time = int(time.time())
+
+        while started == False or timeout:
+            # timeout after 5 seconds
+            if int(time.time()) == curr_time + 5:
+                timeout = True
+                
+            self.sendData("startnow")
+
+            if self.getData() == "starting":
+                started = True
+
+        """
+        while result_ready == False:
+            data = self.getData()
+            re.match(data, r"FE{}E{}")
+        """
+
+        return started
+
 if __name__ == "__main__":
     bt_handler = BluetoothHandler()
     status = bt_handler.pairing()
     print(status)
+    started = bt_handler.startTest()
+    print(started)
