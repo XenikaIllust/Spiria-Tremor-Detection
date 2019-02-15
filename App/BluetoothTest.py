@@ -11,9 +11,12 @@ class BluetoothHandler:
         self.socket.settimeout(5)
 
     def getData(self):
+        try:
             r_data = self.socket.recv(8)
             r_data = r_data.decode("utf-8") # convert bytes object to string
             return r_data
+        except Exception:
+            return None
 
     def sendData(self, t_data):
         self.socket.send(t_data)
@@ -22,10 +25,10 @@ class BluetoothHandler:
         paired = False
         timeout = False
         curr_time = int(time.time())
+        print(curr_time)
         
-        while paired == False and timeout == False:
-            print(int(time.time()) - curr_time)
-            
+        while paired == False or timeout == False:
+            print(int(time.time()))
             # timeout after 5 seconds
             if int(time.time()) >= (curr_time + 5):
                 timeout = True
@@ -56,11 +59,8 @@ class BluetoothHandler:
                 
             self.sendData("startnow")
 
-            try:
-                if self.getData() == "starting":
-                    started = True
-            except:
-                break
+            if self.getData() == "starting":
+                started = True
 
         """
         while result_ready == False:
@@ -76,5 +76,3 @@ if __name__ == "__main__":
     print(status)
     started = bt_handler.startTest()
     print(started)
-    # started = bt_handler.startTest()
-    # print(started)
