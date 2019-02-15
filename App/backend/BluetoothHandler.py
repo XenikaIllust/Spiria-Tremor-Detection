@@ -1,6 +1,7 @@
 import bluetooth
 import time
 import re
+import codecs
 
 class BluetoothHandler:
     def __init__(self):
@@ -10,9 +11,9 @@ class BluetoothHandler:
         self.socket.connect((self.addr, self.port))
         self.socket.settimeout(5)
 
-    def getData(self):
-            r_data = self.socket.recv(8)
-            r_data = r_data.decode("utf-8") # convert bytes object to string
+    def getData(self, num_bytes):
+            r_data = self.socket.recv(num_bytes)
+            # r_data = r_data.decode("utf-8") # convert bytes object to string
             return r_data
 
     def sendData(self, t_data):
@@ -31,11 +32,15 @@ class BluetoothHandler:
                 timeout = True
 
             self.sendData("spairing")
+            
+            data = self.getData(8)
+            data = data.decode("utf-8")
 
-            if self.getData() == "pairdone":
+            if data == "pairdone":
+                print(data)
                 paired = True
 
-            time.sleep(0.001)
+            # time.sleep(0.001)
 
         if paired == True:
             return True
@@ -44,38 +49,36 @@ class BluetoothHandler:
             return False
 
 
-    def startTest(self):
+    def test(self):
         started = False
         result_ready = False
         timeout = False
         curr_time = int(time.time())
-
-        while started == False or timeout == False:
-            # timeout after 5 seconds
-            if int(time.time()) >= (curr_time + 5):
-                timeout = True
                 
-            self.sendData("startnow")
+        self.sendData("startnow")
 
-            try:
-                if self.getData() == "starting":
-                    started = True
-            except:
-                break
+        #TODO: FIND SOURCE OF BLUETOOTH ERROR IN SPARE TIME
 
-        """
         while result_ready == False:
-            data = self.getData()
-            re.match(data, r"FE{}E{}")
-        """
-
-        return started
+            data = self.getData(14)
+            data = data.decode('utf-8')
+            print("raw: ", data)
+            data = data.strip()
+            print("stripped: ", data)
+            
+            if data == "FE5.00EI":
+                result_ready = True
+                
+        self.sendData("finished")
+                
+        return data
+        
 
 if __name__ == "__main__":
     bt_handler = BluetoothHandler()
     status = bt_handler.pairing()
     print(status)
-    started = bt_handler.startTest()
-    print(started)
+    data = bt_handler.test()
+    print(data)
     # started = bt_handler.startTest()
     # print(started)

@@ -130,10 +130,10 @@ class Ui_MainWindow(object):
         pairing_text.setReadOnly(True)
         pairing_layout.addWidget(pairing_text)
 
-        self.debug_pairing_next_button = QPushButton(pairing_layout_widget)
-        self.debug_pairing_next_button.setObjectName("debug next button")
-        self.debug_pairing_next_button.setText("Synthesize pairing")
-        pairing_layout.addWidget(self.debug_pairing_next_button)
+        self.pairing_start_button = QPushButton(pairing_layout_widget)
+        self.pairing_start_button.setObjectName("pairing_start_button")
+        self.pairing_start_button.setText("Start Pairing")
+        pairing_layout.addWidget(self.pairing_start_button)
 
         self.pairing_continue_button = QPushButton(pairing_layout_widget)
         self.pairing_continue_button.setObjectName("pairing_continue_button")

@@ -38,9 +38,9 @@ class StateMachine():
 
         # self.ui.debug_pairing_next_button.clicked.connect(partial(self.ui.set_screen, SPIRAL_TEST_STATE))
         # self.ui.debug_pairing_next_button.clicked.connect(partial(self.set_state, SPIRAL_TEST_STATE))
-        self.ui.debug_pairing_next_button.clicked.connect(self.pairing)
-        self.ui.pairing_continue_button.clicked.connect(partial(self.set_state, SPIRAL_TEST_STATE))
-        self.ui.pairing_continue_button.clicked.connect(self.disable_pairing)
+        self.ui.pairing_start_button.clicked.connect(self.pairing)
+        self.ui.pairing_start_button.clicked.connect(partial(self.set_state, SPIRAL_TEST_STATE))
+        self.ui.pairing_start_button.clicked.connect(self.disable_pairing)
 
         self.ui.spiral_next_button.clicked.connect(partial(self.set_state, TREMOR_TEST_STATE))
         self.ui.spiral_save_exit_button.clicked.connect(partial(self.set_state, TITLE_STATE))
@@ -49,8 +49,10 @@ class StateMachine():
         self.ui.debug_next_button.clicked.connect(self.debug_next_state)
 
     def pairing(self):
-        self.ui.pairing_continue_button.setVisible(True)
-        # self.ui.pairing_continue_button.setVisible(self.backend.bluetooth_handler.pairing())
+        # self.ui.pairing_continue_button.setVisible(True)
+        status = self.backend.bluetooth_handler.pairing()
+        print("pairing status: ", status)
+        self.ui.pairing_continue_button.setVisible(status)
 
     def disable_pairing(self):
         self.ui.pairing_continue_button.setVisible(False)
