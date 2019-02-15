@@ -73,5 +73,3 @@ if __name__ == "__main__":
     print(status)
     started = bt_handler.startTest()
     print(started)
-    started = bt_handler.startTest()
-    print(started)

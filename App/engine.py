@@ -1,6 +1,4 @@
-from GUI import *
-from UART_Talker import *
-from Request_Handler import *
+from functools import partial
 
 """
     Backend Engine for Spiria Raspberry Pi-based Application
@@ -11,55 +9,68 @@ PAIRING_STATE = 1
 SPIRAL_TEST_STATE = 2
 SPIRAL_FINISHED_STATE = 3
 TREMOR_TEST_STATE = 4
-TREMOR_FINISHED_STATE = 4
-QUESTIONNAIRE_STATE = 5
-COMPLETE_STATE = 6
+TREMOR_FINISHED_STATE = 5
+QUESTIONNAIRE_STATE = 6
+COMPLETE_STATE = 7
+
+STATE_COUNT = 8
 
 class StateMachine():
-    def __init__(self):
-        self.state = TITLE_STATE
+    def __init__(self, ui, backend):
+        self.ui = ui
+        self.backend = backend
+        self.set_actions()
+        self.state = None
+        self.set_state(TITLE_STATE)
 
     def set_state(self, state):
         self.state = state
+        print("state: ", self.state)
 
-        if self.state == TITLE_STATE:
-            pass
-        elif self.state == PAIRING_STATE:
-            pass
-        elif self.state == SPIRAL_TEST_STATE:
-            pass
-        elif self.state == SPIRAL_FINISHED_STATE:
-            pass
-        elif self.state == TREMOR_TEST_STATE:
-            pass
-        elif self.state == TREMOR_FINISHED_STATE:
-            pass
-        elif self.state == QUESTIONNAIRE_STATE:
-            pass
-        elif self.state == COMPLETE_STATE:
-            pass
+        # self.update()
 
     def get_state(self):
         return self.state
 
+    def set_actions(self):
+        self.ui.start_button.clicked.connect(partial(self.ui.set_screen, PAIRING_STATE))
+        self.ui.start_button.clicked.connect(partial(self.set_state, PAIRING_STATE))
 
-class BackendServices():
-    def __init__(self):
-        self.uart_listener = UART_Talker()
-        self.request_handler = Request_Handler()
+        self.ui.debug_pairing_next_button.clicked.connect(partial(self.ui.set_screen, SPIRAL_TEST_STATE))
+        self.ui.debug_pairing_next_button.clicked.connect(partial(self.set_state, SPIRAL_TEST_STATE))
 
-    def update(self, state):
-        pass
+        self.ui.spiral_next_button.clicked.connect(partial(self.set_state, TREMOR_TEST_STATE))
+        self.ui.spiral_next_button.clicked.connect(partial(self.ui.set_screen, TREMOR_TEST_STATE))
+        self.ui.spiral_save_exit_button.clicked.connect(partial(self.set_state, TITLE_STATE))
+        self.ui.spiral_save_exit_button.clicked.connect(partial(self.ui.set_screen, TITLE_STATE))
 
+        self.ui.debug_next_button.clicked.connect(self.ui.debug_flip_page)
+        self.ui.debug_next_button.clicked.connect(self.debug_next_state)
 
-def spiral_evaluate():
-    pass
+    def update(self):
+        if self.state == TITLE_STATE:
+            pass
 
-def tremor_evaluate():
-    pass
+        elif self.state == PAIRING_STATE:
+            pass
 
-def questionnaire_evaluate():
-    pass
+        elif self.state == SPIRAL_TEST_STATE:
+            pass
 
-def result_evaluate():
-    pass
+        elif self.state == SPIRAL_FINISHED_STATE:
+            pass
+
+        elif self.state == TREMOR_TEST_STATE:
+            pass
+
+        elif self.state == TREMOR_FINISHED_STATE:
+            pass
+
+        elif self.state == QUESTIONNAIRE_STATE:
+            pass
+
+        elif self.state == COMPLETE_STATE:
+            pass
+
+    def debug_next_state(self):
+        self.set_state((self.state + 1) % STATE_COUNT)

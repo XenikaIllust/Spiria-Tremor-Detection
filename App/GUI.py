@@ -1,9 +1,9 @@
-from PyQt5.QtCore import QRect, Qt
-from PyQt5.QtWidgets import QApplication, QFrame, QWidget, QStackedWidget, QHBoxLayout, QVBoxLayout, QGraphicsView, QLineEdit, QPushButton
-from PyQt5.QtTest import QTest
+from PyQt5.QtCore import QRect
+from PyQt5.QtWidgets import QFrame, QWidget, QStackedWidget, QHBoxLayout, QVBoxLayout, QGraphicsView, QLineEdit, QPushButton
 
 from engine import *
-from time import sleep
+
+PAGE_COUNT = STATE_COUNT
 
 class Ui_MainWindow(object):
     def setup_ui(self, MainWindow):
@@ -47,17 +47,23 @@ class Ui_MainWindow(object):
 
         self.spiral_complete_test_screen = QWidget()
         self.spiral_complete_test_screen.setGeometry(self.frame.geometry())
-        self.setup_test_complete_screen(self.spiral_complete_test_screen)
+        self.setup_spiral_test_complete_screen(self.spiral_complete_test_screen)
 
         self.tremor_test_screen = QWidget()
         self.tremor_test_screen.setGeometry(self.frame.geometry())
         self.setup_tremor_test_screen()
 
-        #self.questionnaire_screen = QWidget()+
-
         self.tremor_complete_test_screen = QWidget()
         self.tremor_complete_test_screen.setGeometry(self.frame.geometry())
-        self.setup_test_complete_screen(self.tremor_complete_test_screen)
+        self.setup_tremor_test_complete_screen(self.tremor_complete_test_screen)
+
+        self.questionnaire_screen = QWidget()
+        self.questionnaire_screen.setGeometry(self.frame.geometry())
+        self.setup_questionnaire_screen()
+
+        self.complete_screen = QWidget()
+        self.complete_screen.setGeometry(self.frame.geometry())
+        self.setup_complete_screen()
 
         self.stacked_widget.addWidget(self.title_screen)
         self.stacked_widget.addWidget(self.pairing_screen)
@@ -65,11 +71,13 @@ class Ui_MainWindow(object):
         self.stacked_widget.addWidget(self.spiral_complete_test_screen)
         self.stacked_widget.addWidget(self.tremor_test_screen)
         self.stacked_widget.addWidget(self.tremor_complete_test_screen)
+        self.stacked_widget.addWidget(self.questionnaire_screen)
+        self.stacked_widget.addWidget(self.complete_screen)
 
-        self.next_button = QPushButton(self.frame)
-        self.next_button.move(self.fullscreen_dimensions.width() - self.next_button.width() - HORIZONTAL_BORDERSIZE,
+        self.debug_next_button = QPushButton(self.frame)
+        self.debug_next_button.move(self.fullscreen_dimensions.width() - self.debug_next_button.width() - HORIZONTAL_BORDERSIZE,
                         VERTICAL_BORDERSIZE)
-        self.next_button.setText("Next")
+        self.debug_next_button.setText("Next")
 
         self.exit_button = QPushButton(self.frame)
         self.exit_button.setGeometry(QRect(self.frame.geometry().right() - self.exit_button.geometry().width(),
@@ -78,9 +86,7 @@ class Ui_MainWindow(object):
         print(self.exit_button.geometry())
         self.exit_button.setText("Exit")
 
-    def debug_flip_page(self):
-        current = self.ui.stacked_widget.currentIndex()
-        self.ui.set_screen(current + 1)
+        print(self.stacked_widget.currentIndex())
 
     def setup_title_screen(self):
         layout_widget = QWidget(self.title_screen)
@@ -105,12 +111,11 @@ class Ui_MainWindow(object):
         subtitle.setReadOnly(True)
         layout.addWidget(subtitle)
 
-        start_button = QPushButton(layout_widget)
-        start_button.setObjectName("start button")
-        start_button.setText("Begin")
-        layout.addWidget(start_button)
+        self.start_button = QPushButton(layout_widget)
+        self.start_button.setObjectName("start button")
+        self.start_button.setText("Begin")
+        layout.addWidget(self.start_button)
 
-        layout_widget.setLayout(layout)
 
     def setup_pairing_screen(self):
         pairing_layout_widget = QWidget(self.pairing_screen)
@@ -130,7 +135,11 @@ class Ui_MainWindow(object):
         pairing_text.setReadOnly(True)
         pairing_layout.addWidget(pairing_text)
 
-        pairing_layout_widget.setLayout(pairing_layout)
+        self.debug_pairing_next_button = QPushButton(pairing_layout_widget)
+        self.debug_pairing_next_button.setObjectName("debug next button")
+        self.debug_pairing_next_button.setText("Next")
+        pairing_layout.addWidget(self.debug_pairing_next_button)
+
 
     def setup_spiral_test_screen(self):
         spiral_test_layout_widget = QWidget(self.spiral_test_screen)
@@ -152,6 +161,7 @@ class Ui_MainWindow(object):
 
         # spiral_test_drawing_widget = Spiral_Painter()
         # spiral_test_layout.addWidget(spiral_test_drawing_widget)
+
 
     def setup_tremor_test_screen(self):
         tremor_test_layout_widget = QWidget(self.tremor_test_screen)
@@ -175,7 +185,7 @@ class Ui_MainWindow(object):
     def setup_questionnaire_screen(self):
         pass
 
-    def setup_test_complete_screen(self, screen_widget):
+    def setup_spiral_test_complete_screen(self, screen_widget):
         complete_test_layout_widget = QWidget(screen_widget)
         complete_test_layout_widget.setGeometry(self.frame.geometry())
 
@@ -196,23 +206,68 @@ class Ui_MainWindow(object):
         complete_test_button_layout_widget = QWidget()
         complete_test_button_layout = QHBoxLayout(complete_test_button_layout_widget)
 
-        next_button = QPushButton(complete_test_button_layout_widget)
-        next_button.setObjectName("next_button")
-        next_button.setText("Next")
-        complete_test_button_layout.addWidget(next_button)
+        self.spiral_next_button = QPushButton(complete_test_button_layout_widget)
+        self.spiral_next_button.setObjectName("spiral_next_button")
+        self.spiral_next_button.setText("Next")
+        complete_test_button_layout.addWidget(self.spiral_next_button)
 
-        save_exit_button = QPushButton(complete_test_button_layout_widget)
-        save_exit_button.setObjectName("save_exit_button")
-        save_exit_button.setText("Save and Exit")
-        complete_test_button_layout.addWidget(save_exit_button)
+        self.spiral_save_exit_button = QPushButton(complete_test_button_layout_widget)
+        self.spiral_save_exit_button.setObjectName("save_exit_button")
+        self.spiral_save_exit_button.setText("Save and Exit")
+        complete_test_button_layout.addWidget(self.spiral_save_exit_button)
+
+        complete_test_layout.addWidget(complete_test_button_layout_widget)
+
+    def setup_tremor_test_complete_screen(self, screen_widget):
+        complete_test_layout_widget = QWidget(screen_widget)
+        complete_test_layout_widget.setGeometry(self.frame.geometry())
+
+        complete_test_layout = QVBoxLayout(complete_test_layout_widget)
+
+        complete_test_title = QLineEdit(complete_test_layout_widget)
+        complete_test_title.setObjectName("complete_test_title")
+        complete_test_title.setText("Test Complete")
+        complete_test_title.setReadOnly(True)
+        complete_test_layout.addWidget(complete_test_title)
+
+        complete_test_text = QLineEdit(complete_test_layout_widget)
+        complete_test_text.setObjectName("complete_test_text")
+        complete_test_text.setText("Please click \"Continue\" to proceed or \"Save and Exit\" to save your progress and quit this session.")
+        complete_test_text.setReadOnly(True)
+        complete_test_layout.addWidget(complete_test_text)
+
+        complete_test_button_layout_widget = QWidget()
+        complete_test_button_layout = QHBoxLayout(complete_test_button_layout_widget)
+
+        self.tremor_next_button = QPushButton(complete_test_button_layout_widget)
+        self.tremor_next_button.setObjectName("next_button")
+        self.tremor_next_button.setText("Next")
+        complete_test_button_layout.addWidget(self.tremor_next_button)
+
+        self.tremor_save_exit_button = QPushButton(complete_test_button_layout_widget)
+        self.tremor_save_exit_button.setObjectName("save_exit_button")
+        self.tremor_save_exit_button.setText("Save and Exit")
+        complete_test_button_layout.addWidget(self.tremor_save_exit_button)
 
         complete_test_layout.addWidget(complete_test_button_layout_widget)
 
     def setup_complete_screen(self):
-        pass
+        complete_layout_widget = QWidget(self.complete_screen)
+        complete_layout_widget.setGeometry(self.frame.geometry())
+
+        complete_layout = QVBoxLayout(complete_layout_widget)
+
+        self.complete_button = QPushButton(complete_layout_widget)
+        self.complete_button.setObjectName("complete_button")
+        self.complete_button.setText("Finish")
+        complete_layout.addWidget(self.complete_button)
+
 
     def set_screen(self, screen):
         self.stacked_widget.setCurrentIndex(screen)
+
+    def debug_flip_page(self):
+        self.set_screen((self.stacked_widget.currentIndex() + 1) % PAGE_COUNT)
 
 """
 def run():
