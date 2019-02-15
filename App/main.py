@@ -1,7 +1,5 @@
-from PyQt5.QtCore import QFile, QRect, QTextStream
-from PyQt5.QtWidgets import QApplication
-from GUI import *
-from Backend_Services import *
+from frontend.GUI import *
+from backend.Backend_Services import *
 from engine import *
 
 class Spiria_App(QWidget):
