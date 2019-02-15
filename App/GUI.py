@@ -93,7 +93,7 @@ class Ui_MainWindow(object):
 
     def setup_title_screen(self):
         self.title_layout_widget = QWidget(self.title_screen)
-        self.title_layout_widget.setGeometry(QRect(self.frame.geometry().width() // 3, self.frame.geometry().height() // 4, self.frame.geometry().width() // 3, self.frame.geometry().height() // 2))
+        self.title_layout_widget.setGeometry(QRect(self.frame.geometry().width() // 3, self.frame.geometry().height() * 0.1, self.frame.geometry().width() // 3, self.frame.geometry().height() * 0.8))
         self.title_layout_widget.setObjectName("title_layout_widget")
 
         self.title_layout = QVBoxLayout(self.title_layout_widget)
@@ -101,21 +101,9 @@ class Ui_MainWindow(object):
         pixmap = QPixmap("./assets/images/logo.png")
         self.logo = QLabel(self.title_layout_widget)
         self.logo.setObjectName("logo")
-        self.logo.setFixedSize(self.title_layout_widget.width(), self.title_layout_widget.height())
-        self.logo.setPixmap(pixmap.scaled(self.logo.width(), self.logo.height()))
+        self.logo.setGeometry(self.title_layout_widget.geometry())
+        self.logo.setPixmap(pixmap.scaled(self.logo.width(), self.logo.height(), Qt.KeepAspectRatio))
         self.title_layout.addWidget(self.logo)
-
-        self.title = QLineEdit(self.title_layout_widget)
-        self.title.setObjectName("title")
-        self.title.setText("SPIRIA")
-        self.title.setReadOnly(True)
-        self.title_layout.addWidget(self.title)
-
-        self.subtitle = QLineEdit(self.title_layout_widget)
-        self.subtitle.setObjectName("subtitle")
-        self.subtitle.setText("Preliminary Parkinson's Detection Device")
-        self.subtitle.setReadOnly(True)
-        self.title_layout.addWidget(self.subtitle)
 
         self.start_button = QPushButton(self.title_layout_widget)
         self.start_button.setObjectName("start_button")
@@ -144,8 +132,14 @@ class Ui_MainWindow(object):
 
         self.debug_pairing_next_button = QPushButton(pairing_layout_widget)
         self.debug_pairing_next_button.setObjectName("debug next button")
-        self.debug_pairing_next_button.setText("Next")
+        self.debug_pairing_next_button.setText("Synthesize pairing")
         pairing_layout.addWidget(self.debug_pairing_next_button)
+
+        self.pairing_continue_button = QPushButton(pairing_layout_widget)
+        self.pairing_continue_button.setObjectName("pairing_continue_button")
+        self.pairing_continue_button.setText("Continue")
+        self.pairing_continue_button.setVisible(False)
+        pairing_layout.addWidget(self.pairing_continue_button)
 
 
     def setup_spiral_test_screen(self):

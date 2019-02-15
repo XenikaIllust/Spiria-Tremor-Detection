@@ -27,31 +27,29 @@ class StateMachine():
 
     def set_state(self, state):
         self.state = state
+        self.ui.set_screen(self.state)
         print("state: ", self.state)
-
-        self.update()
 
     def get_state(self):
         return self.state
 
     def set_actions(self):
-        self.ui.start_button.clicked.connect(partial(self.ui.set_screen, PAIRING_STATE))
         self.ui.start_button.clicked.connect(partial(self.set_state, PAIRING_STATE))
 
         # self.ui.debug_pairing_next_button.clicked.connect(partial(self.ui.set_screen, SPIRAL_TEST_STATE))
         # self.ui.debug_pairing_next_button.clicked.connect(partial(self.set_state, SPIRAL_TEST_STATE))
-        self.ui.debug_pairing_next_button.clicked.connect(self._debug_pairing)
+        self.ui.debug_pairing_next_button.clicked.connect(self.pairing)
+        self.ui.pairing_continue_button.clicked.connect(partial(self.set_state, SPIRAL_TEST_STATE))
 
         self.ui.spiral_next_button.clicked.connect(partial(self.set_state, TREMOR_TEST_STATE))
-        self.ui.spiral_next_button.clicked.connect(partial(self.ui.set_screen, TREMOR_TEST_STATE))
         self.ui.spiral_save_exit_button.clicked.connect(partial(self.set_state, TITLE_STATE))
-        self.ui.spiral_save_exit_button.clicked.connect(partial(self.ui.set_screen, TITLE_STATE))
 
         self.ui.debug_next_button.clicked.connect(self.ui.debug_flip_page)
         self.ui.debug_next_button.clicked.connect(self.debug_next_state)
 
-    def _debug_pairing(self):
-        self.paired = True
+    def pairing(self):
+        self.ui.pairing_continue_button.setVisible(True)
+        # self.ui.pairing_continue_button.setVisible(self.backend.bluetooth_handler.pairing())
 
     def debug_next_state(self):
         self.set_state((self.state + 1) % STATE_COUNT)
