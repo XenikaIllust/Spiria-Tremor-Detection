@@ -43,6 +43,7 @@ class BluetoothHandler:
         if timeout == True:
             return False
 
+
     def startTest(self):
         started = False
         result_ready = False

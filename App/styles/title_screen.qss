@@ -1,7 +1,26 @@
-#subtitle {
-    background-color: rgba(0,0,0,0);
+#MainWindow {
+    background-color: #19191B;
+    border-style: none;
 }
 
-#bg {
-    background-color: black;
+#version {
+    border: solid transparent;
+    background: transparent;
+    color: white;
 }
+
+#self.title_layout {
+    border-style: none;
+}
+
+#logo {
+    background-color: transparent;
+}
+
+QLineEdit {
+    border: solid transparent;
+    background: transparent;
+    color: white;
+    qproperty-alignment: AlignCenter;
+}
+

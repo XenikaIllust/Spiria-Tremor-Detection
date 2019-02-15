@@ -12,7 +12,6 @@ class Spiria_App(QWidget):
         self.ui.setup_ui(self)
 
         self.backend_services = BackendServices()
-
         self.state_machine = StateMachine(self.ui, self.backend_services)
 
         self.ui.exit_button.clicked.connect(self.close)
