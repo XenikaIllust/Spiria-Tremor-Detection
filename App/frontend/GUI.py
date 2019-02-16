@@ -92,23 +92,23 @@ class Ui_MainWindow(object):
         print(self.stacked_widget.currentIndex())
 
     def setup_title_screen(self):
-        self.title_layout_widget = QWidget(self.title_screen)
-        self.title_layout_widget.setGeometry(QRect(self.frame.geometry().width() // 3, self.frame.geometry().height() * 0.1, self.frame.geometry().width() // 3, self.frame.geometry().height() * 0.8))
-        self.title_layout_widget.setObjectName("title_layout_widget")
+        title_layout_widget = QWidget(self.title_screen)
+        title_layout_widget.setGeometry(QRect(self.frame.geometry().width() // 3, self.frame.geometry().height() * 0.1, self.frame.geometry().width() // 3, self.frame.geometry().height() * 0.8))
+        title_layout_widget.setObjectName("title_layout_widget")
 
-        self.title_layout = QVBoxLayout(self.title_layout_widget)
+        title_layout = QVBoxLayout(title_layout_widget)
 
         pixmap = QPixmap("./assets/images/logo.png")
-        self.logo = QLabel(self.title_layout_widget)
-        self.logo.setObjectName("logo")
-        self.logo.setGeometry(self.title_layout_widget.geometry())
-        self.logo.setPixmap(pixmap.scaled(self.logo.width(), self.logo.height(), Qt.KeepAspectRatio))
-        self.title_layout.addWidget(self.logo)
+        logo = QLabel(title_layout_widget)
+        logo.setObjectName("logo")
+        logo.setGeometry(title_layout_widget.geometry())
+        logo.setPixmap(pixmap.scaled(logo.width(), logo.height(), Qt.KeepAspectRatio))
+        title_layout.addWidget(logo)
 
-        self.start_button = QPushButton(self.title_layout_widget)
+        self.start_button = QPushButton(title_layout_widget)
         self.start_button.setObjectName("start_button")
         self.start_button.setText("Begin")
-        self.title_layout.addWidget(self.start_button)
+        title_layout.addWidget(self.start_button)
 
 
     def setup_pairing_screen(self):
@@ -118,10 +118,11 @@ class Ui_MainWindow(object):
 
         pairing_layout = QVBoxLayout(pairing_layout_widget)
 
-        pixmap = QPixmap("./assets/images/pairing.png")
+        pixmap = QPixmap("./assets/images/pair1.png")
         pairing_image = QLabel(pairing_layout_widget)
         pairing_image.setObjectName("pairing_image")
-        pairing_image.setFixedSize(3000, 3000)
+        pairing_image.setGeometry(pairing_layout_widget.geometry())
+        pairing_image.setPixmap(pixmap.scaled(pairing_image.width(), pairing_image.height(), Qt.KeepAspectRatio))
         pairing_layout.addWidget(pairing_image)
 
         pairing_text = QLineEdit(pairing_layout_widget)

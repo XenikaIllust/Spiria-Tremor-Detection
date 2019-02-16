@@ -9,8 +9,16 @@
     color: white;
 }
 
-#self.title_layout {
-    border-style: none;
+#spiral_test_title {
+    font-family: "Montserrat SemiBold";
+    font-style: Semi-Bold;
+    font-size: 60px
+}
+
+#spiral_test_text {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-size: 40px
 }
 
 #logo {

@@ -45,8 +45,7 @@ class BluetoothHandler:
         if paired == True:
             return True
 
-        if timeout == True:
-            return False
+        return False
 
 
     def test(self):

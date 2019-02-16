@@ -49,10 +49,10 @@ class StateMachine():
         self.ui.debug_next_button.clicked.connect(self.debug_next_state)
 
     def pairing(self):
-        # self.ui.pairing_continue_button.setVisible(True)
-        status = self.backend.bluetooth_handler.pairing()
-        print("pairing status: ", status)
-        self.ui.pairing_continue_button.setVisible(status)
+        self.ui.pairing_continue_button.setVisible(True)
+        # status = self.backend.bluetooth_handler.pairing()
+        # print("pairing status: ", status)
+        # self.ui.pairing_continue_button.setVisible(status)
 
     def disable_pairing(self):
         self.ui.pairing_continue_button.setVisible(False)
