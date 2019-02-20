@@ -143,11 +143,15 @@ class Ui_MainWindow(object):
         self.pairing_start_button.setObjectName("pairing_start_button")
         self.pairing_start_button.setText("START PAIRING")
         pairing_layout.addWidget(self.pairing_start_button)
+        
+        self.pairing_failed_button = QPushButton(pairing_layout_widget)
+        self.pairing_failed_button.setObjectName("pairing_failed_button")
+        self.pairing_failed_button.setText("FAILED, PRESS TO TRY AGAIN")
+        pairing_layout.addWidget(self.pairing_failed_button)
 
         self.pairing_continue_button = QPushButton(pairing_layout_widget)
         self.pairing_continue_button.setObjectName("pairing_continue_button")
         self.pairing_continue_button.setText("CONTINUE")
-        self.pairing_continue_button.setVisible(False)
         pairing_layout.addWidget(self.pairing_continue_button)
 
 
@@ -286,6 +290,16 @@ class Ui_MainWindow(object):
 
     def set_screen(self, screen):
         self.stacked_widget.setCurrentIndex(screen)
+        self.reset_screen(True)
+        
+    def reset_screen(self, status):
+        if status == True:
+            curr_index = self.stacked_widget.currentIndex()
+            
+            if curr_index == PAIRING_STATE:
+                self.pairing_start_button.setVisible(True)
+                self.pairing_continue_button.setVisible(False)
+                self.pairing_failed_button.setVisible(False)
 
     def debug_flip_page(self):
         self.set_screen((self.stacked_widget.currentIndex() + 1) % PAGE_COUNT)

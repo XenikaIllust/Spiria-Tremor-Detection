@@ -33,8 +33,12 @@ class BluetoothHandler:
 
             self.sendData("spairing")
             
-            data = self.getData(8)
-            data = data.decode("utf-8")
+            data = None
+            try:
+                data = self.getData(8)
+                data = data.decode("utf-8")
+            except:
+                pass
 
             if data == "pairdone":
                 print(data)
