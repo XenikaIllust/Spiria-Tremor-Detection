@@ -12,17 +12,21 @@
 #spiral_test_title {
     font-family: "Montserrat SemiBold";
     font-style: Semi-Bold;
-    font-size: 60px
+    font-size: 60px;
 }
 
 #spiral_test_text {
     font-family: "Montserrat";
     font-style: normal;
-    font-size: 40px
+    font-size: 40px;
 }
 
 #logo {
     background-color: transparent;
+}
+
+#spiral_test_drawing_widget {
+    background-color: White;
 }
 
 QLineEdit {
@@ -30,5 +34,12 @@ QLineEdit {
     background: transparent;
     color: white;
     qproperty-alignment: AlignCenter;
+}
+
+QPushButton {
+    background-color: #dcdbdb;
+    font-family: "Montserrat SemiBold";
+    font-style: Semi-Bold;
+    font-size: 30px;
 }
 

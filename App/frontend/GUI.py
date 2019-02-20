@@ -1,9 +1,9 @@
 from PyQt5.QtCore import *
-# from PyQt5.QtWidgets import QFrame, QWidget, QStackedWidget, QHBoxLayout, QVBoxLayout, QGraphicsView, QGraphicsPixmapItem, QLineEdit, QPushButton
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 
 from engine import *
+from frontend.Spiral_Painter import Spiral_Painter
 
 PAGE_COUNT = STATE_COUNT
 
@@ -17,6 +17,14 @@ class Ui_MainWindow(object):
 
         VERTICAL_BORDERSIZE = self.fullscreen_dimensions.height() // 100
         HORIZONTAL_BORDERSIZE = self.fullscreen_dimensions.width() // 100
+
+        font_db = QFontDatabase()
+        font_db.addApplicationFont("./assets/fonts/Montserrat-SemiBold.ttf")
+        #font_db.addApplicationFont("./assets/fonts/Montserrat-Regular.ttf")
+        #font_db.addApplicationFont("./assets/fonts/Montserrat-Medium.ttf")
+        #font_db.addApplicationFont("./assets/fonts/Montserrat-Black.ttf")
+        #font_db.addApplicationFont("./assets/fonts/Montserrat-Bold.ttf")
+
 
         self.bg = QWidget(self.MainWindow)
         self.bg.setGeometry(self.MainWindow.geometry())
@@ -133,12 +141,12 @@ class Ui_MainWindow(object):
 
         self.pairing_start_button = QPushButton(pairing_layout_widget)
         self.pairing_start_button.setObjectName("pairing_start_button")
-        self.pairing_start_button.setText("Start Pairing")
+        self.pairing_start_button.setText("START PAIRING")
         pairing_layout.addWidget(self.pairing_start_button)
 
         self.pairing_continue_button = QPushButton(pairing_layout_widget)
         self.pairing_continue_button.setObjectName("pairing_continue_button")
-        self.pairing_continue_button.setText("Continue")
+        self.pairing_continue_button.setText("CONTINUE")
         self.pairing_continue_button.setVisible(False)
         pairing_layout.addWidget(self.pairing_continue_button)
 
@@ -161,8 +169,10 @@ class Ui_MainWindow(object):
         spiral_test_text.setReadOnly(True)
         spiral_test_layout.addWidget(spiral_test_text)
 
-        # spiral_test_drawing_widget = Spiral_Painter()
-        # spiral_test_layout.addWidget(spiral_test_drawing_widget)
+        self.spiral_test_drawing_widget = Spiral_Painter()
+        self.spiral_test_drawing_widget.setObjectName("spiral_test_drawing_widget")
+        self.spiral_test_drawing_widget.setGeometry(spiral_test_layout_widget.geometry())
+        spiral_test_layout.addWidget(self.spiral_test_drawing_widget)
 
 
     def setup_tremor_test_screen(self):
@@ -219,12 +229,12 @@ class Ui_MainWindow(object):
 
         self.spiral_next_button = QPushButton(complete_test_button_layout_widget)
         self.spiral_next_button.setObjectName("spiral_next_button")
-        self.spiral_next_button.setText("Next")
+        self.spiral_next_button.setText("CONTINUE")
         complete_test_button_layout.addWidget(self.spiral_next_button)
 
         self.spiral_save_exit_button = QPushButton(complete_test_button_layout_widget)
         self.spiral_save_exit_button.setObjectName("save_exit_button")
-        self.spiral_save_exit_button.setText("Save and Exit")
+        self.spiral_save_exit_button.setText("SAVE AND EXIT")
         complete_test_button_layout.addWidget(self.spiral_save_exit_button)
 
         complete_test_layout.addWidget(complete_test_button_layout_widget)
