@@ -7,6 +7,7 @@ class Spiral_Painter(QWidget):
     def __init__(self, parent=None):
         super().__init__()
 
+        self.setAutoFillBackground(True)
         self.setup_ui()
 
         self.draw_enabled = False
@@ -15,6 +16,9 @@ class Spiral_Painter(QWidget):
 
     def setup_ui(self):
         self.setGeometry(QRect(400, 400, 400, 400))
+        palette = QPalette()
+        palette.setBrush(QPalette.Background, QBrush(QPixmap("../assets/images/logo.png").scaled(self.width(), self.height(), Qt.KeepAspectRatio)))
+        self.setPalette(palette)
 
     def paintEvent(self, event):
         if self.last_pos != None:

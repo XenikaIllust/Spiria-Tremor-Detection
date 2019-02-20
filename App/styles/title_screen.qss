@@ -25,10 +25,6 @@
     background-color: transparent;
 }
 
-#spiral_test_drawing_widget {
-    background-color: White;
-}
-
 QLineEdit {
     border: solid transparent;
     background: transparent;
