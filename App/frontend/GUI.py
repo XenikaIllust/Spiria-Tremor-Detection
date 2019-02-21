@@ -48,9 +48,9 @@ class Ui_MainWindow(object):
         self.title_screen.setGeometry(self.frame.geometry())
         self.setup_title_screen()
 
-        self.pairing_screen = QWidget()
-        self.pairing_screen.setGeometry(self.frame.geometry())
-        self.setup_pairing_screen()
+        self.spiral_pairing_screen = QWidget()
+        self.spiral_pairing_screen.setGeometry(self.frame.geometry())
+        self.setup_spiral_pairing_screen()
 
         self.spiral_test_screen = QWidget()
         self.spiral_test_screen.setGeometry(self.frame.geometry())
@@ -59,6 +59,10 @@ class Ui_MainWindow(object):
         self.spiral_complete_test_screen = QWidget()
         self.spiral_complete_test_screen.setGeometry(self.frame.geometry())
         self.setup_spiral_test_complete_screen(self.spiral_complete_test_screen)
+
+        self.tremor_pairing_screen = QWidget()
+        self.tremor_pairing_screen.setGeometry(self.frame.geometry())
+        self.setup_tremor_pairing_screen()
 
         self.tremor_test_screen = QWidget()
         self.tremor_test_screen.setGeometry(self.frame.geometry())
@@ -77,9 +81,10 @@ class Ui_MainWindow(object):
         self.setup_complete_screen()
 
         self.stacked_widget.addWidget(self.title_screen)
-        self.stacked_widget.addWidget(self.pairing_screen)
+        self.stacked_widget.addWidget(self.spiral_pairing_screen)
         self.stacked_widget.addWidget(self.spiral_test_screen)
         self.stacked_widget.addWidget(self.spiral_complete_test_screen)
+        self.stacked_widget.addWidget(self.tremor_pairing_screen)
         self.stacked_widget.addWidget(self.tremor_test_screen)
         self.stacked_widget.addWidget(self.tremor_complete_test_screen)
         self.stacked_widget.addWidget(self.questionnaire_screen)
@@ -119,40 +124,40 @@ class Ui_MainWindow(object):
         title_layout.addWidget(self.start_button)
 
 
-    def setup_pairing_screen(self):
-        pairing_layout_widget = QWidget(self.pairing_screen)
-        pairing_layout_widget.setGeometry(QRect(self.frame.geometry().width() // 3, self.frame.geometry().height() // 4,
+    def setup_spiral_pairing_screen(self):
+        spiral_pairing_layout_widget = QWidget(self.spiral_pairing_screen)
+        spiral_pairing_layout_widget.setGeometry(QRect(self.frame.geometry().width() // 3, self.frame.geometry().height() // 4,
                                         self.frame.geometry().width() // 3, self.frame.geometry().height() // 2))
 
-        pairing_layout = QVBoxLayout(pairing_layout_widget)
+        spiral_pairing_layout = QVBoxLayout(spiral_pairing_layout_widget)
 
         pixmap = QPixmap("./assets/images/pair1.png")
-        pairing_image = QLabel(pairing_layout_widget)
-        pairing_image.setObjectName("pairing_image")
-        pairing_image.setGeometry(pairing_layout_widget.geometry())
-        pairing_image.setPixmap(pixmap.scaled(pairing_image.width(), pairing_image.height(), Qt.KeepAspectRatio))
-        pairing_layout.addWidget(pairing_image)
+        spiral_pairing_image = QLabel(spiral_pairing_layout_widget)
+        spiral_pairing_image.setObjectName("pairing_image")
+        spiral_pairing_image.setGeometry(spiral_pairing_layout_widget.geometry())
+        spiral_pairing_image.setPixmap(pixmap.scaled(spiral_pairing_image.width(), spiral_pairing_image.height(), Qt.KeepAspectRatio))
+        spiral_pairing_layout.addWidget(spiral_pairing_image)
 
-        pairing_text = QLineEdit(pairing_layout_widget)
-        pairing_text.setObjectName("pairing_text")
-        pairing_text.setText("Pairing with Device")
-        pairing_text.setReadOnly(True)
-        pairing_layout.addWidget(pairing_text)
+        spiral_pairing_text = QLineEdit(spiral_pairing_layout_widget)
+        spiral_pairing_text.setObjectName("pairing_text")
+        spiral_pairing_text.setText("Pairing with Device")
+        spiral_pairing_text.setReadOnly(True)
+        spiral_pairing_layout.addWidget(spiral_pairing_text)
 
-        self.pairing_start_button = QPushButton(pairing_layout_widget)
-        self.pairing_start_button.setObjectName("pairing_start_button")
-        self.pairing_start_button.setText("START PAIRING")
-        pairing_layout.addWidget(self.pairing_start_button)
-        
-        self.pairing_failed_button = QPushButton(pairing_layout_widget)
-        self.pairing_failed_button.setObjectName("pairing_failed_button")
-        self.pairing_failed_button.setText("FAILED, PRESS TO TRY AGAIN")
-        pairing_layout.addWidget(self.pairing_failed_button)
+        self.spiral_pairing_start_button = QPushButton(spiral_pairing_layout_widget)
+        self.spiral_pairing_start_button.setObjectName("pairing_start_button")
+        self.spiral_pairing_start_button.setText("START PAIRING")
+        spiral_pairing_layout.addWidget(self.spiral_pairing_start_button)
 
-        self.pairing_continue_button = QPushButton(pairing_layout_widget)
-        self.pairing_continue_button.setObjectName("pairing_continue_button")
-        self.pairing_continue_button.setText("CONTINUE")
-        pairing_layout.addWidget(self.pairing_continue_button)
+        self.spiral_pairing_failed_button = QPushButton(spiral_pairing_layout_widget)
+        self.spiral_pairing_failed_button.setObjectName("pairing_failed_button")
+        self.spiral_pairing_failed_button.setText("FAILED, PRESS TO TRY AGAIN")
+        spiral_pairing_layout.addWidget(self.spiral_pairing_failed_button)
+
+        self.spiral_pairing_continue_button = QPushButton(spiral_pairing_layout_widget)
+        self.spiral_pairing_continue_button.setObjectName("pairing_continue_button")
+        self.spiral_pairing_continue_button.setText("CONTINUE")
+        spiral_pairing_layout.addWidget(self.spiral_pairing_continue_button)
 
 
     def setup_spiral_test_screen(self):
@@ -178,6 +183,43 @@ class Ui_MainWindow(object):
         self.spiral_test_drawing_widget.setGeometry(spiral_test_layout_widget.geometry())
         spiral_test_layout.addWidget(self.spiral_test_drawing_widget)
 
+    def setup_tremor_pairing_screen(self):
+        tremor_pairing_layout_widget = QWidget(self.tremor_pairing_screen)
+        tremor_pairing_layout_widget.setGeometry(
+            QRect(self.frame.geometry().width() // 3, self.frame.geometry().height() // 4,
+                  self.frame.geometry().width() // 3, self.frame.geometry().height() // 2))
+
+        tremor_pairing_layout = QVBoxLayout(tremor_pairing_layout_widget)
+
+        pixmap = QPixmap("./assets/images/pair1.png")
+        tremor_pairing_image = QLabel(tremor_pairing_layout_widget)
+        tremor_pairing_image.setObjectName("pairing_image")
+        tremor_pairing_image.setGeometry(tremor_pairing_layout_widget.geometry())
+        tremor_pairing_image.setPixmap(
+            pixmap.scaled(tremor_pairing_image.width(), tremor_pairing_image.height(), Qt.KeepAspectRatio))
+        tremor_pairing_layout.addWidget(tremor_pairing_image)
+
+        tremor_pairing_text = QLineEdit(tremor_pairing_layout_widget)
+        tremor_pairing_text.setObjectName("pairing_text")
+        tremor_pairing_text.setText("Pairing with Device")
+        tremor_pairing_text.setReadOnly(True)
+        tremor_pairing_layout.addWidget(tremor_pairing_text)
+
+        self.tremor_pairing_start_button = QPushButton(tremor_pairing_layout_widget)
+        self.tremor_pairing_start_button.setObjectName("pairing_start_button")
+        self.tremor_pairing_start_button.setText("START PAIRING")
+        tremor_pairing_layout.addWidget(self.tremor_pairing_start_button)
+
+        self.tremor_pairing_failed_button = QPushButton(tremor_pairing_layout_widget)
+        self.tremor_pairing_failed_button.setObjectName("pairing_failed_button")
+        self.tremor_pairing_failed_button.setText("FAILED, PRESS TO TRY AGAIN")
+        tremor_pairing_layout.addWidget(self.tremor_pairing_failed_button)
+
+        self.tremor_pairing_continue_button = QPushButton(tremor_pairing_layout_widget)
+        self.tremor_pairing_continue_button.setObjectName("pairing_continue_button")
+        self.tremor_pairing_continue_button.setText("CONTINUE")
+        tremor_pairing_layout.addWidget(self.tremor_pairing_continue_button)
+
 
     def setup_tremor_test_screen(self):
         tremor_test_layout_widget = QWidget(self.tremor_test_screen)
@@ -197,18 +239,6 @@ class Ui_MainWindow(object):
         tremor_test_text.setReadOnly(True)
         tremor_test_layout.addWidget(tremor_test_text)
 
-
-    def setup_questionnaire_screen(self):
-        questionnaire_layout_widget = QWidget(self.questionnaire_screen)
-        questionnaire_layout_widget.setGeometry(self.frame.geometry())
-
-        questionnaire_layout = QVBoxLayout(questionnaire_layout_widget)
-
-        questionnaire_title = QLineEdit(questionnaire_layout_widget)
-        questionnaire_title.setObjectName("questionnaire_title")
-        questionnaire_title.setText("Questionnaire")
-        questionnaire_title.setReadOnly(True)
-        questionnaire_layout.addWidget(questionnaire_title)
 
     def setup_spiral_test_complete_screen(self, screen_widget):
         complete_test_layout_widget = QWidget(screen_widget)
@@ -266,15 +296,29 @@ class Ui_MainWindow(object):
 
         self.tremor_next_button = QPushButton(complete_test_button_layout_widget)
         self.tremor_next_button.setObjectName("next_button")
-        self.tremor_next_button.setText("Next")
+        self.tremor_next_button.setText("CONTINUE")
         complete_test_button_layout.addWidget(self.tremor_next_button)
 
         self.tremor_save_exit_button = QPushButton(complete_test_button_layout_widget)
         self.tremor_save_exit_button.setObjectName("save_exit_button")
-        self.tremor_save_exit_button.setText("Save and Exit")
+        self.tremor_save_exit_button.setText("SAVE AND EXIT")
         complete_test_button_layout.addWidget(self.tremor_save_exit_button)
 
         complete_test_layout.addWidget(complete_test_button_layout_widget)
+
+
+    def setup_questionnaire_screen(self):
+        questionnaire_layout_widget = QWidget(self.questionnaire_screen)
+        questionnaire_layout_widget.setGeometry(self.frame.geometry())
+
+        questionnaire_layout = QVBoxLayout(questionnaire_layout_widget)
+
+        questionnaire_title = QLineEdit(questionnaire_layout_widget)
+        questionnaire_title.setObjectName("questionnaire_title")
+        questionnaire_title.setText("Questionnaire")
+        questionnaire_title.setReadOnly(True)
+        questionnaire_layout.addWidget(questionnaire_title)
+
 
     def setup_complete_screen(self):
         complete_layout_widget = QWidget(self.complete_screen)
@@ -295,11 +339,17 @@ class Ui_MainWindow(object):
     def reset_screen(self, status):
         if status == True:
             curr_index = self.stacked_widget.currentIndex()
-            
-            if curr_index == PAIRING_STATE:
-                self.pairing_start_button.setVisible(True)
-                self.pairing_continue_button.setVisible(False)
-                self.pairing_failed_button.setVisible(False)
+            print(curr_index)
+
+            if curr_index == SPIRAL_PAIRING_STATE:
+                self.spiral_pairing_start_button.setVisible(True)
+                self.spiral_pairing_continue_button.setVisible(False)
+                self.spiral_pairing_failed_button.setVisible(False)
+
+            elif curr_index == TREMOR_PAIRING_STATE:
+                self.tremor_pairing_start_button.setVisible(True)
+                self.tremor_pairing_continue_button.setVisible(False)
+                self.tremor_pairing_failed_button.setVisible(False)
 
     def debug_flip_page(self):
         self.set_screen((self.stacked_widget.currentIndex() + 1) % PAGE_COUNT)

@@ -15,17 +15,19 @@ class Spiral_Painter(QWidget):
         self.points = []
 
     def setup_ui(self):
-        self.setGeometry(QRect(400, 400, 400, 400))
-        palette = QPalette()
-        palette.setBrush(QPalette.Background, QBrush(QPixmap("../assets/images/logo.png").scaled(self.width(), self.height(), Qt.KeepAspectRatio)))
-        self.setPalette(palette)
+        # palette = QPalette()
+        # palette.setBrush(QPalette.Background, QBrush(QPixmap("../assets/images/logo.png").scaled(self.width(), self.height(), Qt.KeepAspectRatio)))
+        # self.setPalette(palette)
+        self.pixmap = QPixmap(":/images/logo.png").scaled(self.width(), self.height(), Qt.KeepAspectRatio)
+        self.image = QLabel(self)
+        self.image.setPixmap(self.pixmap.scaled(self.width(), self.height(), Qt.KeepAspectRatio))
 
     def paintEvent(self, event):
         if self.last_pos != None:
             self.points.append(self.last_pos)
 
             painter = QPainter()
-            painter.begin(self)
+            painter.begin(self.image.pixmap())
             painter.setPen(Qt.red)
             painter.pen().setWidth(10)
             for ind in range(0, len(self.points)-1):
@@ -38,14 +40,14 @@ class Spiral_Painter(QWidget):
             self.draw_enabled = True
             print("Mouse press: ", event.pos())
             self.last_pos = event.pos()
-            #self.repaint()
+            # self.repaint()
             self.update()
 
     def mouseMoveEvent(self, event):
         if self.draw_enabled:
             print("Mouse move: ", event.pos())
             self.last_pos = event.pos()
-            #self.repaint()
+            # self.repaint()
             self.update()
 
     def mouseReleaseEvent(self, event):
@@ -57,6 +59,7 @@ class Spiral_Painter(QWidget):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     spiral_painter = Spiral_Painter()
+    spiral_painter.setGeometry(400,400,400,400)
     spiral_painter.show()
     app.exec_()
 
