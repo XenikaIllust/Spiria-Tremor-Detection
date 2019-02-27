@@ -48,19 +48,23 @@ class UART_Handler():
 
         return False
 
-    def get_coordinates(self, stop, points):
+    def test_get_coordinates(self):
         invalid = False
-        while stop != True:
-            data_x = int(self.getData(4))
-            data_y = int(self.getData(4))
+        data_x = int(self.getData(4))
+        data_y = int(self.getData(4))
 
-            if data_x == 1023 and data_y == 1023:
-                invalid = True
+        if data_x == 1023 and data_y == 1023:
+            invalid = True
 
-            if invalid == False:
-                points.append((data_x, data_y))
+        if invalid == False:
+            return (data_x, data_y)
 
             
 if __name__ == "__main__":
-    uart_listener = UART_Handler("/dev/ttyS0", 9600)
-    print(uart_listener.pairing())
+    uart_handler = UART_Handler("/dev/ttyS0", 9600)
+    # status = uart_handler.pairing()
+
+    points = []
+
+    while True:
+        point = uart_handler.test_get_coordinates()
