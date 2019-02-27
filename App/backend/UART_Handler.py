@@ -12,23 +12,24 @@ class UART_Handler():
         self.ser.close()
 
     def getData(self, num_bytes):
-        return self.ser.read(num_bytes)
+        data = self.ser.read(num_bytes)
+        data = data.decode("utf-8")
+        return data
 
     def sendData(self, data):
+        data = bytes(data.encode("utf-8"))
         self.ser.write(data)
 
     def pairing(self):
         paired = False
         timeout = False
-        curr_time = int(time.time())
         
         while paired == False and timeout == False:
-            self.sendData(bytes("spairing".encode("utf-8")))
+            self.sendData("spairing")
             
             data = None
             try:
                 data = self.getData(8)
-                data = data.decode("utf-8")
             except:
                 pass
             
@@ -46,8 +47,20 @@ class UART_Handler():
             return True
 
         return False
+
+    def get_coordinates(self, stop, points):
+        invalid = False
+        while stop != True:
+            data_x = int(self.getData(4))
+            data_y = int(self.getData(4))
+
+            if data_x == 1023 and data_y == 1023:
+                invalid = True
+
+            if invalid == False:
+                points.append((data_x, data_y))
+
             
 if __name__ == "__main__":
-    uart_listener = UART_Talker("/dev/ttyS0", 9600)
+    uart_listener = UART_Handler("/dev/ttyS0", 9600)
     print(uart_listener.pairing())
-        
