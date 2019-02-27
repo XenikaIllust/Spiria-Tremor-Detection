@@ -2,6 +2,13 @@ from frontend.GUI import *
 from backend.Backend_Services import *
 from engine import *
 
+'''
+TODO: 
+Spiral Painter Spiral Adjustment
+Establish server
+Test google cloud machine learning functions
+'''
+
 class Spiria_App(QWidget):
     def __init__(self, parent=None):
         super().__init__()

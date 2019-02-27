@@ -18,7 +18,7 @@ class Spiral_Painter(QWidget):
         # palette = QPalette()
         # palette.setBrush(QPalette.Background, QBrush(QPixmap("../assets/images/logo.png").scaled(self.width(), self.height(), Qt.KeepAspectRatio)))
         # self.setPalette(palette)
-        self.pixmap = QPixmap(":/images/logo.png").scaled(self.width(), self.height(), Qt.KeepAspectRatio)
+        self.pixmap = QPixmap("./assets/images/logo.png").scaled(self.width(), self.height(), Qt.KeepAspectRatio)
         self.image = QLabel(self)
         self.image.setPixmap(self.pixmap.scaled(self.width(), self.height(), Qt.KeepAspectRatio))
 
