@@ -1,7 +1,7 @@
 import serial
 import time
 
-class UART_Talker():
+class UART_Handler():
     def __init__(self, portname, baudrate):
         self.ser = serial.Serial(port=portname, baudrate=baudrate, timeout=5, write_timeout=5)
 

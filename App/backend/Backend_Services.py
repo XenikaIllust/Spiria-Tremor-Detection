@@ -1,11 +1,11 @@
 from backend.Request_Handler import *
-from backend.BluetoothHandler import *
-
+from backend.Bluetooth_Handler import *
+from backend.UART_Handler import *
 
 class BackendServices():
     def __init__(self):
         # Comment out if not using UART
-        self.uart_listener = UART_Talker(9600)
+        # self.uart_handler = UART_Handler("/dev/ttyS0", 9600)
 
         self.request_handler = Request_Handler()
 

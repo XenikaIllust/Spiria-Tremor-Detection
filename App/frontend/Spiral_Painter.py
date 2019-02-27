@@ -12,28 +12,48 @@ class Spiral_Painter(QWidget):
 
         self.draw_enabled = False
         self.last_pos = None
+        self.curr_pos = None
         self.points = []
 
     def setup_ui(self):
         # palette = QPalette()
         # palette.setBrush(QPalette.Background, QBrush(QPixmap("../assets/images/logo.png").scaled(self.width(), self.height(), Qt.KeepAspectRatio)))
         # self.setPalette(palette)
-        self.pixmap = QPixmap("./assets/images/logo.png").scaled(self.width(), self.height(), Qt.KeepAspectRatio)
+        self.pixmap = QPixmap("../assets/images/logo.png").scaled(self.width(), self.height(), Qt.KeepAspectRatio)
         self.image = QLabel(self)
         self.image.setPixmap(self.pixmap.scaled(self.width(), self.height(), Qt.KeepAspectRatio))
 
+        self.canvas = QLabel(self)
+        self.canvas_pixmap = QPixmap(self.width(), self.height()).scaled(self.width(), self.height(), Qt.KeepAspectRatio)
+        print(self.canvas_pixmap)
+        self.canvas_pixmap.fill(Qt.transparent)
+        self.canvas.setPixmap(self.canvas_pixmap)
+
+        self.canvas.setMouseTracking(True)
+        self.setMouseTracking(True)
+
     def paintEvent(self, event):
+        self.canvas.pixmap().fill(Qt.transparent)
+        if self.curr_pos != None:
+            cursor_painter = QPainter()
+            cursor_painter.begin(self.canvas.pixmap())
+            cursor_painter.pen().setWidth(100)
+            cursor_painter.setPen(Qt.blue)
+            cursor_painter.setBrush(Qt.blue)
+            cursor_painter.drawEllipse(self.curr_pos, 5, 5)
+            cursor_painter.end()
+
         if self.last_pos != None:
             self.points.append(self.last_pos)
-
             painter = QPainter()
-            painter.begin(self.image.pixmap())
-            painter.setPen(Qt.red)
+            painter.begin(self.canvas.pixmap())
             painter.pen().setWidth(10)
+            painter.setPen(Qt.red)
             for ind in range(0, len(self.points)-1):
                 painter.drawLine(self.points[ind], self.points[ind+1])
             painter.end()
-            print("canvas repainted")
+        print("canvas repainted")
+
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
@@ -41,14 +61,15 @@ class Spiral_Painter(QWidget):
             print("Mouse press: ", event.pos())
             self.last_pos = event.pos()
             # self.repaint()
-            self.update()
+        self.update()
 
     def mouseMoveEvent(self, event):
+        self.curr_pos = event.pos()
+        print("Mouse move: ", event.pos())
         if self.draw_enabled:
-            print("Mouse move: ", event.pos())
             self.last_pos = event.pos()
-            # self.repaint()
-            self.update()
+            print("Mouse move painted: ", event.pos())
+        self.update()
 
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.LeftButton and self.draw_enabled:

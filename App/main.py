@@ -33,7 +33,6 @@ def run():
     MainWindow = QWidget()
     spiria_app = Spiria_App(MainWindow)
     spiria_app.showFullScreen()
-    # spiria_app.showMaximized()
     sys.exit(app.exec_())
 
 if __name__ == "__main__":
