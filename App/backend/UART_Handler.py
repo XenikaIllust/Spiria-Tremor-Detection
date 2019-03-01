@@ -1,6 +1,6 @@
 import serial
 import time
-import cv2
+# import cv2
 import numpy as np
 from Homographer import *
 
@@ -54,9 +54,13 @@ class UART_Handler():
 
     def get_point(self):
         invalid = False
-        data_x = int(self.getData(4))
-        data_y = int(self.getData(4))
+        data = self.getData(9)
 
+        if data != None:
+            data = data.split(",")
+            data_x = int(data[0])
+            data_y = int(data[1])
+        
         if data_x == 1023 and data_y == 1023:
             invalid = True
 
@@ -85,5 +89,5 @@ if __name__ == "__main__":
     points = []
 
     while True:
-        point = uart_handler.get_coordinates()
+        point = uart_handler.get_point()
         print(point)
