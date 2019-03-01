@@ -1,5 +1,7 @@
 import serial
 import time
+import cv2
+import numpy as np
 
 class UART_Handler():
     def __init__(self, portname, baudrate):
@@ -48,7 +50,7 @@ class UART_Handler():
 
         return False
 
-    def test_get_coordinates(self):
+    def get_point(self):
         invalid = False
         data_x = int(self.getData(4))
         data_y = int(self.getData(4))
@@ -57,7 +59,28 @@ class UART_Handler():
             invalid = True
 
         if invalid == False:
-            return (data_x, data_y)
+            return [data_x, data_y]
+
+    def calibration(self, dest_geometry):
+        self.calib_pts_src = np.array([])
+
+        # obtain calibration points
+        for i in range(0, 4):
+            np.append(self.calib_pts_src, self.get_point())
+
+        self.calib_pts_dest = np.array([[dest_geometry.left(), dest_geometry.top()],
+                                        [dest_geometry.right(), dest_geometry.top()],
+                                        [dest_geometry.right(), dest_geometry.bottom()],
+                                        [dest_geometry.left(), dest_geometry.bottom()]])
+
+        self.H = self.find_homography(self.calib_pts_src, self.calib_pts_dest)
+
+    def find_homography(self, calib_pts_src, calib_pts_dest):
+        self.H = cv2.getPerspectiveTransform(calib_pts_src, calib_pts_dest)
+
+    def transform_coordinates(self, pts_src):
+        pts_dest = np.matmul(pts_src, self.H)
+        return pts_dest
 
             
 if __name__ == "__main__":
