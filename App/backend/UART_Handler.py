@@ -2,10 +2,12 @@ import serial
 import time
 import cv2
 import numpy as np
+from Homographer import *
 
 class UART_Handler():
     def __init__(self, portname, baudrate):
         self.ser = serial.Serial(port=portname, baudrate=baudrate, timeout=5, write_timeout=5)
+        self.homographer = Homographer()
 
     def enable(self):
         self.ser.open()
@@ -73,14 +75,7 @@ class UART_Handler():
                                         [dest_geometry.right(), dest_geometry.bottom()],
                                         [dest_geometry.left(), dest_geometry.bottom()]])
 
-        self.H = self.find_homography(self.calib_pts_src, self.calib_pts_dest)
-
-    def find_homography(self, calib_pts_src, calib_pts_dest):
-        self.H = cv2.getPerspectiveTransform(calib_pts_src, calib_pts_dest)
-
-    def transform_coordinates(self, pts_src):
-        pts_dest = np.matmul(pts_src, self.H)
-        return pts_dest
+        self.transform = self.homographer.get_homography_matrix(self.calib_pts_src, self.calib_pts_dest)
 
             
 if __name__ == "__main__":
@@ -90,4 +85,5 @@ if __name__ == "__main__":
     points = []
 
     while True:
-        point = uart_handler.test_get_coordinates()
+        point = uart_handler.get_coordinates()
+        print(point)
