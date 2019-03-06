@@ -65,7 +65,6 @@ class UART_Handler():
             raise ValueError("Invalid Point")
         
         ts2 = time.perf_counter()
-        print(ts2-ts1)
         return [data_x, data_y]
 
     def calibration(self, dest_geometry):
