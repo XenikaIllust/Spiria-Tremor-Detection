@@ -6,7 +6,7 @@ from Homographer import *
 
 class UART_Handler():
     def __init__(self, portname, baudrate):
-        self.ser = serial.Serial(port=portname, baudrate=baudrate, timeout=5, write_timeout=5)
+        self.ser = serial.Serial(port=portname, baudrate=baudrate, timeout=1, write_timeout=1)
         self.homographer = Homographer()
 
     def enable(self):
@@ -53,19 +53,20 @@ class UART_Handler():
         return False
 
     def get_point(self):
-        invalid = False
+        ts1 = time.perf_counter()
         data = self.getData(9)
 
         if data != None:
             data = data.split(",")
             data_x = int(data[0])
             data_y = int(data[1])
-        
+            
         if data_x == 1023 and data_y == 1023:
-            invalid = True
-
-        if invalid == False:
-            return [data_x, data_y]
+            raise ValueError("Invalid Point")
+        
+        ts2 = time.perf_counter()
+        print(ts2-ts1)
+        return [data_x, data_y]
 
     def calibration(self, dest_geometry):
         self.calib_pts_src = np.array([])
