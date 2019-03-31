@@ -11,7 +11,7 @@ class BackendServices():
         self.request_handler = Request_Handler()
 
         # Comment out if not using BT
-        self.bluetooth_handler = BluetoothHandler()
+        # self.bluetooth_handler = BluetoothHandler()
 
         self.questionnaire_calculator = Questionnaire_Calculator()
 

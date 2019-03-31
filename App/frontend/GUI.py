@@ -263,6 +263,8 @@ class Ui_MainWindow(object):
 
         num_seconds = 90
         timer = QTimer()
+        timer.start(num_seconds * 1000)
+
 
     def setup_spiral_test_complete_screen(self, screen_widget):
         complete_test_layout_widget = QWidget(screen_widget)

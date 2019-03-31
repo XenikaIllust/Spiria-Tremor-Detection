@@ -53,9 +53,9 @@ class StateMachine():
         self.ui.tremor_pairing_start_button.clicked.connect(partial(self.set_state, TREMOR_TEST_START_STATE))
 
         # enable if BT available
-        self.ui.tremor_pairing_start_button.clicked.connect(self.tremor_pairing)
-        self.ui.tremor_pairing_failed_button.clicked.connect(partial(self.set_state, TREMOR_PAIRING_STATE))
-        self.ui.tremor_pairing_continue_button.clicked.connect(partial(self.set_state, TREMOR_TEST_STATE))
+        # self.ui.tremor_pairing_start_button.clicked.connect(self.tremor_pairing)
+        # self.ui.tremor_pairing_failed_button.clicked.connect(partial(self.set_state, TREMOR_PAIRING_STATE))
+        # self.ui.tremor_pairing_continue_button.clicked.connect(partial(self.set_state, TREMOR_TEST_STATE))
 
         self.ui.tremor_test_start_button.clicked.connect(partial(self.set_state, TREMOR_TEST_STATE))
 
