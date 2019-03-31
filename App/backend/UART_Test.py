@@ -29,7 +29,7 @@ if __name__ == "__main__":
         except ValueError as e:
             return [sc]
         
-        sc.set_offsets(np.array([point[0], point[1]]))
+        sc.set_offsets(np.array([point]))
         return [sc]
 
 

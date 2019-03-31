@@ -53,7 +53,6 @@ class UART_Handler():
         return False
 
     def get_point(self):
-        ts1 = time.perf_counter()
         data = self.getData(9)
 
         if data != None:
@@ -63,8 +62,7 @@ class UART_Handler():
             
         if data_x == 1023 and data_y == 1023:
             raise ValueError("Invalid Point")
-        
-        ts2 = time.perf_counter()
+
         return [data_x, data_y]
 
     def calibration(self, dest_geometry):

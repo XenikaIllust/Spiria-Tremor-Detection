@@ -9,12 +9,13 @@ SPIRAL_PAIRING_STATE = 1
 SPIRAL_TEST_STATE = 2
 SPIRAL_FINISHED_STATE = 3
 TREMOR_PAIRING_STATE = 4
-TREMOR_TEST_STATE = 5
-TREMOR_FINISHED_STATE = 6
-QUESTIONNAIRE_STATE = 7
-COMPLETE_STATE = 8
+TREMOR_TEST_START_STATE = 5
+TREMOR_TEST_STATE = 6
+TREMOR_FINISHED_STATE = 7
+QUESTIONNAIRE_STATE = 8
+COMPLETE_STATE = 9
 
-STATE_COUNT = 9
+STATE_COUNT = 10
 
 class StateMachine():
     def __init__(self, ui, backend):
@@ -49,20 +50,26 @@ class StateMachine():
         self.ui.spiral_save_exit_button.clicked.connect(partial(self.set_state, TITLE_STATE))
 
         # enable if BT not available
-        # self.ui.tremor_pairing_start_button.clicked.connect(partial(self.set_state, TREMOR_TEST_STATE))
+        self.ui.tremor_pairing_start_button.clicked.connect(partial(self.set_state, TREMOR_TEST_START_STATE))
 
         # enable if BT available
         self.ui.tremor_pairing_start_button.clicked.connect(self.tremor_pairing)
         self.ui.tremor_pairing_failed_button.clicked.connect(partial(self.set_state, TREMOR_PAIRING_STATE))
         self.ui.tremor_pairing_continue_button.clicked.connect(partial(self.set_state, TREMOR_TEST_STATE))
 
+        self.ui.tremor_test_start_button.clicked.connect(partial(self.set_state, TREMOR_TEST_STATE))
+
         self.ui.tremor_next_button.clicked.connect(partial(self.set_state, QUESTIONNAIRE_STATE))
         self.ui.tremor_save_exit_button.clicked.connect(partial(self.set_state, TITLE_STATE))
+
+        self.ui.questionnaire_complete_button.clicked.connect(partial(self.set_state, COMPLETE_STATE))
+        self.ui.questionnaire_complete_button.clicked.connect(self.backend.questionnaire_calculator.calculate_score)
 
         self.ui.complete_button.clicked.connect(partial(self.set_state, TITLE_STATE))
 
         self.ui.debug_next_button.clicked.connect(self.ui.debug_flip_page)
         self.ui.debug_next_button.clicked.connect(self.debug_next_state)
+
 
     def spiral_pairing(self):
         status = self.backend.UART_handler.pairing()
@@ -77,7 +84,10 @@ class StateMachine():
         self.ui.tremor_pairing_start_button.setVisible(False)
         self.ui.tremor_pairing_continue_button.setVisible(status)
         self.ui.tremor_pairing_failed_button.setVisible(not(status))
-        
+
+    def questionnaire_calculation(self):
+        pass
+
 
     def debug_next_state(self):
         self.set_state((self.state + 1) % STATE_COUNT)

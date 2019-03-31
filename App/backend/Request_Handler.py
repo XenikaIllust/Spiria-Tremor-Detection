@@ -1,5 +1,3 @@
-from requests import *
-
 class Request_Handler():
     def sendSpiralData(self):
         pass
