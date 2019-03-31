@@ -64,9 +64,13 @@ class Ui_MainWindow(object):
         self.tremor_pairing_screen.setGeometry(self.frame.geometry())
         self.setup_tremor_pairing_screen()
 
+        self.tremor_test_start_screen = QWidget()
+        self.tremor_test_start_screen.setGeometry(self.frame.geometry())
+        self.setup_tremor_test_start_screen()
+
         self.tremor_test_screen = QWidget()
         self.tremor_test_screen.setGeometry(self.frame.geometry())
-        self.setup_tremor_test_screen()
+        self.setup_tremor_test_start_screen()
 
         self.tremor_complete_test_screen = QWidget()
         self.tremor_complete_test_screen.setGeometry(self.frame.geometry())
@@ -85,6 +89,7 @@ class Ui_MainWindow(object):
         self.stacked_widget.addWidget(self.spiral_test_screen)
         self.stacked_widget.addWidget(self.spiral_complete_test_screen)
         self.stacked_widget.addWidget(self.tremor_pairing_screen)
+        self.stacked_widget.addWidget(self.tremor_test_start_screen)
         self.stacked_widget.addWidget(self.tremor_test_screen)
         self.stacked_widget.addWidget(self.tremor_complete_test_screen)
         self.stacked_widget.addWidget(self.questionnaire_screen)
@@ -221,7 +226,7 @@ class Ui_MainWindow(object):
         tremor_pairing_layout.addWidget(self.tremor_pairing_continue_button)
 
 
-    def setup_tremor_test_screen(self):
+    def setup_tremor_test_start_screen(self):
         tremor_test_layout_widget = QWidget(self.tremor_test_screen)
         tremor_test_layout_widget.setGeometry(self.frame.geometry())
 
@@ -235,10 +240,29 @@ class Ui_MainWindow(object):
 
         tremor_test_text = QLineEdit(tremor_test_layout_widget)
         tremor_test_text.setObjectName("tremor_test_text")
-        tremor_test_text.setText("Use the IR Pen to trace the tremor in the white area.")
+        tremor_test_text.setText("Wear the glove and press start to begin the tremor test.")
         tremor_test_text.setReadOnly(True)
         tremor_test_layout.addWidget(tremor_test_text)
 
+        self.tremor_test_start_button = QPushButton(tremor_test_layout_widget)
+        self.tremor_test_start_button.setObjectName("tremor_test_start_button")
+        self.tremor_test_start_button.setText("Start")
+        tremor_test_layout.addWidget(self.tremor_test_start_button)
+
+    def setup_tremor_test_screen(self):
+        tremor_test_layout_widget = QWidget(self.tremor_test_screen)
+        tremor_test_layout_widget.setGeometry(self.frame.geometry())
+
+        tremor_test_layout = QVBoxLayout(tremor_test_layout_widget)
+
+        tremor_test_text = QLineEdit(tremor_test_layout_widget)
+        tremor_test_text.setObjectName("tremor_test_text")
+        tremor_test_text.setText("Wear the glove and press start to begin the tremor test.")
+        tremor_test_text.setReadOnly(True)
+        tremor_test_layout.addWidget(tremor_test_text)
+
+        num_seconds = 90
+        timer = QTimer()
 
     def setup_spiral_test_complete_screen(self, screen_widget):
         complete_test_layout_widget = QWidget(screen_widget)
@@ -320,11 +344,178 @@ class Ui_MainWindow(object):
         questionnaire_layout.addWidget(questionnaire_title)
 
 
+        question1_layout = QVBoxLayout()
+        questionnaire_layout.addLayout(question1_layout)
+
+        question1_text = QLineEdit(questionnaire_layout_widget)
+        question1_text.setObjectName("question1")
+        question1_text.setText("1. Do you think you have a tremor?")
+        question1_text.setReadOnly(True)
+        question1_layout.addWidget(question1_text)
+
+        question1_buttonlayout = QHBoxLayout(questionnaire_layout_widget)
+        questionnaire_layout.addLayout(question1_buttonlayout)
+
+        question1_button0 = QRadioButton()
+        question1_button0.setText("Yes")
+        question1_button0.setChecked(False)
+
+        question1_button1 = QRadioButton()
+        question1_button1.setText("Unsure")
+        question1_button1.setChecked(False)
+
+        question1_button2 = QRadioButton()
+        question1_button2.setText("No")
+        question1_button2.setChecked(True)
+
+        question1_buttonlayout.addWidget(question1_button0)
+        question1_buttonlayout.addWidget(question1_button1)
+        question1_buttonlayout.addWidget(question1_button2)
+
+
+        question2_layout = QVBoxLayout()
+        questionnaire_layout.addLayout(question2_layout)
+
+        question2_text = QLineEdit(questionnaire_layout_widget)
+        question2_text.setObjectName("question2")
+        question2_text.setText("2. If you have a tremor, is it worse when writing or using utensils?")
+        question2_text.setReadOnly(True)
+        question2_layout.addWidget(question2_text)
+
+        question2_buttonlayout = QHBoxLayout(questionnaire_layout_widget)
+        questionnaire_layout.addLayout(question2_buttonlayout)
+
+        question2_button0 = QRadioButton()
+        question2_button0.setText("Yes")
+        question2_button0.setChecked(False)
+
+        question2_button1 = QRadioButton()
+        question2_button1.setText("Unsure")
+        question2_button1.setChecked(False)
+
+        question2_button2 = QRadioButton()
+        question2_button2.setText("No")
+        question2_button2.setChecked(True)
+
+        question2_buttonlayout.addWidget(question2_button0)
+        question2_buttonlayout.addWidget(question2_button1)
+        question2_buttonlayout.addWidget(question2_button2)
+
+
+        question3_layout = QVBoxLayout()
+        questionnaire_layout.addLayout(question3_layout)
+
+        question3_text = QLineEdit(questionnaire_layout_widget)
+        question3_text.setObjectName("question3")
+        question3_text.setText("3. Is tremor worse when resting arm?")
+        question3_text.setReadOnly(True)
+        question3_layout.addWidget(question3_text)
+
+        question3_buttonlayout = QHBoxLayout(questionnaire_layout_widget)
+        questionnaire_layout.addLayout(question3_buttonlayout)
+
+        question3_button0 = QRadioButton()
+        question3_button0.setText("Yes")
+        question3_button0.setChecked(False)
+
+        question3_button1 = QRadioButton()
+        question3_button1.setText("Unsure")
+        question3_button1.setChecked(False)
+
+        question3_button2 = QRadioButton()
+        question3_button2.setText("No")
+        question3_button2.setChecked(True)
+
+        question3_buttonlayout.addWidget(question3_button0)
+        question3_buttonlayout.addWidget(question3_button1)
+        question3_buttonlayout.addWidget(question3_button2)
+
+
+        question4_layout = QVBoxLayout()
+        questionnaire_layout.addLayout(question4_layout)
+
+        question4_text = QLineEdit(questionnaire_layout_widget)
+        question4_text.setObjectName("question4")
+        question4_text.setText("4. Have you/anyone noticed slowness of movement or walking?")
+        question4_text.setReadOnly(True)
+        question4_layout.addWidget(question4_text)
+
+        question4_buttonlayout = QHBoxLayout(questionnaire_layout_widget)
+        questionnaire_layout.addLayout(question4_buttonlayout)
+
+        question4_button0 = QRadioButton()
+        question4_button0.setText("Yes")
+        question4_button0.setChecked(False)
+
+        question4_button1 = QRadioButton()
+        question4_button1.setText("No")
+        question4_button1.setChecked(True)
+
+        question4_buttonlayout.addWidget(question4_button0)
+        question4_buttonlayout.addWidget(question4_button1)
+
+
+        question5_layout = QVBoxLayout()
+        questionnaire_layout.addLayout(question5_layout)
+
+        question5_text = QLineEdit(questionnaire_layout_widget)
+        question5_text.setObjectName("question5")
+        question5_text.setText("5. Has anyone noticed you acting out your dreams in sleep?")
+        question5_text.setReadOnly(True)
+        question5_layout.addWidget(question5_text)
+
+        question5_buttonlayout = QHBoxLayout(questionnaire_layout_widget)
+        questionnaire_layout.addLayout(question5_buttonlayout)
+
+        question5_button0 = QRadioButton()
+        question5_button0.setText("Yes")
+        question5_button0.setChecked(False)
+
+        question5_button1 = QRadioButton()
+        question5_button1.setText("No")
+        question5_button1.setChecked(True)
+
+
+        question5_buttonlayout.addWidget(question5_button0)
+        question5_buttonlayout.addWidget(question5_button1)
+
+        question6_layout = QVBoxLayout()
+        questionnaire_layout.addLayout(question6_layout)
+
+        question6_text = QLineEdit(questionnaire_layout_widget)
+        question6_text.setObjectName("question6")
+        question6_text.setText("6. Do you have constipation?")
+        question6_text.setReadOnly(True)
+        question6_layout.addWidget(question6_text)
+
+        question6_buttonlayout = QHBoxLayout(questionnaire_layout_widget)
+        questionnaire_layout.addLayout(question6_buttonlayout)
+
+        question6_button0 = QRadioButton()
+        question6_button0.setText("Yes")
+        question6_button0.setChecked(False)
+
+        question6_button1 = QRadioButton()
+        question6_button1.setText("No")
+        question6_button1.setChecked(True)
+
+        question6_buttonlayout.addWidget(question6_button0)
+        question6_buttonlayout.addWidget(question6_button1)
+
+        self.questionnaire_complete_button = QPushButton(questionnaire_layout_widget)
+        self.questionnaire_complete_button.setObjectName("questionnaire_complete_button")
+        self.questionnaire_complete_button.setText("Submit")
+        questionnaire_layout.addWidget(self.questionnaire_complete_button)
+
     def setup_complete_screen(self):
         complete_layout_widget = QWidget(self.complete_screen)
         complete_layout_widget.setGeometry(self.frame.geometry())
 
         complete_layout = QVBoxLayout(complete_layout_widget)
+
+        complete_text = QLineEdit(complete_layout_widget)
+        complete_text.setObjectName("complete_text")
+        complete_text.setText("Test finished. Thank you for using Spiria")
 
         self.complete_button = QPushButton(complete_layout_widget)
         self.complete_button.setObjectName("complete_button")

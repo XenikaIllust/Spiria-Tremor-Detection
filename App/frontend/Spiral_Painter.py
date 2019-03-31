@@ -3,6 +3,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 import sys
 
+
 class Spiral_Painter(QWidget):
     def __init__(self, parent=None):
         super().__init__()
@@ -54,7 +55,6 @@ class Spiral_Painter(QWidget):
             painter.end()
         print("canvas repainted")
 
-
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
             self.draw_enabled = True
@@ -75,6 +75,17 @@ class Spiral_Painter(QWidget):
         if event.button() == Qt.LeftButton and self.draw_enabled:
             print("Mouse release: ", event.pos())
             self.draw_enabled = False
+
+"""
+class penActiveEvent(QEvent):
+    EVENT_TYPE = QEvent.type(QEvent.registerEventType())
+
+    def __init__(self):
+        super(penActiveEvent, self).__init__(self.EVENT_TYPE)
+
+    def pos(self):
+        pass
+"""
 
 
 if __name__ == '__main__':
