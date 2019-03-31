@@ -49,12 +49,12 @@ class StateMachine():
         self.ui.spiral_save_exit_button.clicked.connect(partial(self.set_state, TITLE_STATE))
 
         # enable if BT not available
-        self.ui.tremor_pairing_start_button.clicked.connect(partial(self.set_state, TREMOR_TEST_STATE))
+        # self.ui.tremor_pairing_start_button.clicked.connect(partial(self.set_state, TREMOR_TEST_STATE))
 
         # enable if BT available
-        # self.ui.tremor_pairing_start_button.clicked.connect(self.tremor_pairing)
-        # self.ui.tremor_pairing_failed_button.clicked.connect(partial(self.set_state, TREMOR_PAIRING_STATE))
-        # self.ui.tremor_pairing_continue_button.clicked.connect(partial(self.set_state, TREMOR_TEST_STATE))
+        self.ui.tremor_pairing_start_button.clicked.connect(self.tremor_pairing)
+        self.ui.tremor_pairing_failed_button.clicked.connect(partial(self.set_state, TREMOR_PAIRING_STATE))
+        self.ui.tremor_pairing_continue_button.clicked.connect(partial(self.set_state, TREMOR_TEST_STATE))
 
         self.ui.tremor_next_button.clicked.connect(partial(self.set_state, QUESTIONNAIRE_STATE))
         self.ui.tremor_save_exit_button.clicked.connect(partial(self.set_state, TITLE_STATE))

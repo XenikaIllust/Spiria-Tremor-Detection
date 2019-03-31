@@ -1,6 +1,6 @@
 from backend.Request_Handler import *
 from backend.Bluetooth_Handler import *
-from backend.UART_Handler import *
+# from backend.UART_Handler import *
 
 class BackendServices():
     def __init__(self):
@@ -10,7 +10,7 @@ class BackendServices():
         self.request_handler = Request_Handler()
 
         # Comment out if not using BT
-        # self.bluetooth_handler = BluetoothHandler()
+        self.bluetooth_handler = BluetoothHandler()
 
     def update(self, state):
         pass
