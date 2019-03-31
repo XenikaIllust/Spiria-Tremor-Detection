@@ -52,7 +52,7 @@ class BluetoothHandler:
         return False
 
 
-    def test(self):
+    def tremor_test(self):
         started = False
         result_ready = False
         timeout = False
@@ -62,19 +62,23 @@ class BluetoothHandler:
 
         #TODO: FIND SOURCE OF BLUETOOTH ERROR IN SPARE TIME
 
+        data_str = ""
         while result_ready == False:
-            data = self.getData(14)
-            data = data.decode('utf-8')
-            print("raw: ", data)
-            data = data.strip()
-            print("stripped: ", data)
+            if len(data_str) > 50:
+                data_str = ""
             
-            if data == "FE5.00EI":
+            data = self.getData(8)
+            data = data.decode('utf-8')
+            data_str += data
+            
+            matches = re.findall(r"FE\d{1,3}\.?\d{0,2}EI", data_str)
+            
+            if len(matches) > 0:
                 result_ready = True
                 
         self.sendData("finished")
-                
-        return data
+        
+        return matches[0]
         
 
 if __name__ == "__main__":
