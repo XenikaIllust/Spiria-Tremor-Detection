@@ -70,7 +70,7 @@ class Ui_MainWindow(object):
 
         self.tremor_test_screen = QWidget()
         self.tremor_test_screen.setGeometry(self.frame.geometry())
-        self.setup_tremor_test_start_screen()
+        self.setup_tremor_test_screen()
 
         self.tremor_complete_test_screen = QWidget()
         self.tremor_complete_test_screen.setGeometry(self.frame.geometry())
@@ -227,27 +227,27 @@ class Ui_MainWindow(object):
 
 
     def setup_tremor_test_start_screen(self):
-        tremor_test_layout_widget = QWidget(self.tremor_test_screen)
-        tremor_test_layout_widget.setGeometry(self.frame.geometry())
+        tremor_test_start_layout_widget = QWidget(self.tremor_test_start_screen)
+        tremor_test_start_layout_widget.setGeometry(self.frame.geometry())
 
-        tremor_test_layout = QVBoxLayout(tremor_test_layout_widget)
+        tremor_test_start_layout = QVBoxLayout(tremor_test_start_layout_widget)
 
-        tremor_test_title = QLineEdit(tremor_test_layout_widget)
-        tremor_test_title.setObjectName("tremor_test_title")
-        tremor_test_title.setText("Tremor Test")
-        tremor_test_title.setReadOnly(True)
-        tremor_test_layout.addWidget(tremor_test_title)
+        tremor_test_start_title = QLineEdit(tremor_test_start_layout_widget)
+        tremor_test_start_title.setObjectName("tremor_test_start_title")
+        tremor_test_start_title.setText("Tremor Test")
+        tremor_test_start_title.setReadOnly(True)
+        tremor_test_start_layout.addWidget(tremor_test_start_title)
 
-        tremor_test_text = QLineEdit(tremor_test_layout_widget)
-        tremor_test_text.setObjectName("tremor_test_text")
-        tremor_test_text.setText("Wear the glove and press start to begin the tremor test.")
-        tremor_test_text.setReadOnly(True)
-        tremor_test_layout.addWidget(tremor_test_text)
+        tremor_test_start_text = QLineEdit(tremor_test_start_layout_widget)
+        tremor_test_start_text.setObjectName("tremor_test_start_text")
+        tremor_test_start_text.setText("Wear the glove and press start to begin the tremor test.")
+        tremor_test_start_text.setReadOnly(True)
+        tremor_test_start_layout.addWidget(tremor_test_start_text)
 
-        self.tremor_test_start_button = QPushButton(tremor_test_layout_widget)
+        self.tremor_test_start_button = QPushButton(tremor_test_start_layout_widget)
         self.tremor_test_start_button.setObjectName("tremor_test_start_button")
         self.tremor_test_start_button.setText("Start")
-        tremor_test_layout.addWidget(self.tremor_test_start_button)
+        tremor_test_start_layout.addWidget(self.tremor_test_start_button)
 
     def setup_tremor_test_screen(self):
         tremor_test_layout_widget = QWidget(self.tremor_test_screen)
@@ -255,15 +255,11 @@ class Ui_MainWindow(object):
 
         tremor_test_layout = QVBoxLayout(tremor_test_layout_widget)
 
-        tremor_test_text = QLineEdit(tremor_test_layout_widget)
-        tremor_test_text.setObjectName("tremor_test_text")
-        tremor_test_text.setText("Wear the glove and press start to begin the tremor test.")
-        tremor_test_text.setReadOnly(True)
-        tremor_test_layout.addWidget(tremor_test_text)
-
-        num_seconds = 90
-        timer = QTimer()
-        timer.start(num_seconds * 1000)
+        self.tremor_time_text = QLineEdit(tremor_test_layout_widget)
+        self.tremor_time_text.setObjectName("tremor_time_text")
+        self.tremor_time_text.setText("Not complete")
+        self.tremor_time_text.setReadOnly(True)
+        tremor_test_layout.addWidget(self.tremor_time_text)
 
 
     def setup_spiral_test_complete_screen(self, screen_widget):

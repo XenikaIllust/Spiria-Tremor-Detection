@@ -1,4 +1,5 @@
 from functools import partial
+from PyQt5.QtCore import QTimer
 
 """
     Backend Engine for Spiria Raspberry Pi-based Application
@@ -57,6 +58,7 @@ class StateMachine():
         # self.ui.tremor_pairing_failed_button.clicked.connect(partial(self.set_state, TREMOR_PAIRING_STATE))
         # self.ui.tremor_pairing_continue_button.clicked.connect(partial(self.set_state, TREMOR_TEST_STATE))
 
+        self.ui.tremor_test_start_button.clicked.connect(partial(self.tremor_begin_timer))
         self.ui.tremor_test_start_button.clicked.connect(partial(self.set_state, TREMOR_TEST_STATE))
 
         self.ui.tremor_next_button.clicked.connect(partial(self.set_state, QUESTIONNAIRE_STATE))
@@ -84,6 +86,16 @@ class StateMachine():
         self.ui.tremor_pairing_start_button.setVisible(False)
         self.ui.tremor_pairing_continue_button.setVisible(status)
         self.ui.tremor_pairing_failed_button.setVisible(not(status))
+
+    def tremor_begin_timer(self):
+        def update_timer(tremor_time_text):
+            print("completed timer")
+            tremor_time_text.setText("Complete")
+
+        num_seconds = 5
+        timer = QTimer()
+        timer.timeout.connect(partial(update_timer, self.ui.tremor_time_text))
+        timer.start(num_seconds)
 
     def questionnaire_calculation(self):
         pass
