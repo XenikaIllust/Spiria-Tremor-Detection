@@ -38,7 +38,7 @@ class Ui_MainWindow(object):
         self.version = QLineEdit(self.frame)
         self.version.move(self.frame.geometry().left(), self.frame.geometry().height() - self.version.height())
         self.version.setObjectName("version")
-        self.version.setText("Water Moccasin v0.01")
+        self.version.setText("King Cobra v3.0")
         self.version.setReadOnly(True)
 
         self.stacked_widget = QStackedWidget(self.frame)
@@ -257,7 +257,6 @@ class Ui_MainWindow(object):
 
         self.tremor_time_text = QLineEdit(tremor_test_layout_widget)
         self.tremor_time_text.setObjectName("tremor_time_text")
-        self.tremor_time_text.setText("Not complete")
         self.tremor_time_text.setReadOnly(True)
         tremor_test_layout.addWidget(self.tremor_time_text)
 

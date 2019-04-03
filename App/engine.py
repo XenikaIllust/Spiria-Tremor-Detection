@@ -18,9 +18,41 @@ COMPLETE_STATE = 9
 
 STATE_COUNT = 10
 
+class Tremor_Timer():
+    def __init__(self, tremor_time_text):
+        self.tremor_time_text = tremor_time_text
+        self.num_seconds = 90
+        self.timer = QTimer(self.tremor_time_text)
+        self.timer.timeout.connect(self.timer_update)
+
+        self.curr_time = self.num_seconds
+
+    def timer_start(self):
+        self.reset()
+        self.tremor_time_text.setText(str(self.curr_time))
+        self.timer.start(1000)
+
+    def timer_update(self):
+        self.tremor_time_text.setText(str(self.curr_time))
+        if self.curr_time > 0:
+            self.curr_time -= 1
+        else:
+            self.tremor_time_text.setText("Complete")
+            self.timer.stop()
+
+    def kill_timer_explicit(self):
+        print("timer killed explicitly")
+        self.timer.stop()
+
+    def reset(self):
+        self.curr_time = self.num_seconds
+
+
 class StateMachine():
     def __init__(self, ui, backend):
         self.ui = ui
+        self.tremor_timer = Tremor_Timer(self.ui.tremor_time_text)
+
         self.backend = backend
         self.set_button_actions()
         self.state = None
@@ -58,7 +90,7 @@ class StateMachine():
         # self.ui.tremor_pairing_failed_button.clicked.connect(partial(self.set_state, TREMOR_PAIRING_STATE))
         # self.ui.tremor_pairing_continue_button.clicked.connect(partial(self.set_state, TREMOR_TEST_STATE))
 
-        self.ui.tremor_test_start_button.clicked.connect(partial(self.tremor_begin_timer))
+        self.ui.tremor_test_start_button.clicked.connect(partial(self.tremor_timer.timer_start))
         self.ui.tremor_test_start_button.clicked.connect(partial(self.set_state, TREMOR_TEST_STATE))
 
         self.ui.tremor_next_button.clicked.connect(partial(self.set_state, QUESTIONNAIRE_STATE))
@@ -86,16 +118,6 @@ class StateMachine():
         self.ui.tremor_pairing_start_button.setVisible(False)
         self.ui.tremor_pairing_continue_button.setVisible(status)
         self.ui.tremor_pairing_failed_button.setVisible(not(status))
-
-    def tremor_begin_timer(self):
-        def update_timer(tremor_time_text):
-            print("completed timer")
-            tremor_time_text.setText("Complete")
-
-        num_seconds = 5
-        timer = QTimer()
-        timer.timeout.connect(partial(update_timer, self.ui.tremor_time_text))
-        timer.start(num_seconds)
 
     def questionnaire_calculation(self):
         pass
