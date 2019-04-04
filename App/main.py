@@ -5,8 +5,6 @@ from engine import *
 '''
 TODO: 
 Spiral Painter Spiral Adjustment
-Establish server
-Test google cloud machine learning functions
 '''
 
 class Spiria_App(QWidget):

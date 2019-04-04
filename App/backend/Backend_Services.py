@@ -1,5 +1,5 @@
 from backend.Request_Handler import *
-# from backend.Bluetooth_Handler import *
+from backend.Bluetooth_Handler import *
 # from backend.UART_Handler import *
 from backend.Questionnaire_Score_Calculation import *
 
@@ -11,7 +11,7 @@ class BackendServices():
         self.request_handler = Request_Handler()
 
         # Comment out if not using BT
-        # self.bluetooth_handler = BluetoothHandler()
+        self.bluetooth_handler = BluetoothHandler()
 
         self.questionnaire_calculator = Questionnaire_Calculator()
 

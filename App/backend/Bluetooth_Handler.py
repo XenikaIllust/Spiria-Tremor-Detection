@@ -78,6 +78,8 @@ class BluetoothHandler:
                 
         self.sendData("finished")
         
+        print(matches[0])
+        
         return matches[0]
         
 
@@ -85,7 +87,5 @@ if __name__ == "__main__":
     bt_handler = BluetoothHandler()
     status = bt_handler.pairing()
     print(status)
-    data = bt_handler.test()
+    data = bt_handler.tremor_test()
     print(data)
-    # started = bt_handler.startTest()
-    # print(started)
