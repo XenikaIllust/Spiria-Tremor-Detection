@@ -1,12 +1,22 @@
 import serial
 import time
+import queue
 # import cv2
 import numpy as np
 from Homographer import *
+from threading import Thread
 
 class UART_Handler():
     def __init__(self, portname, baudrate):
         self.ser = serial.Serial(port=portname, baudrate=baudrate, timeout=1, write_timeout=1)
+        self.queue = queue.Queue()
+        
+        self.curr_point = None
+        
+        self.load_to_queue_thread = Thread(target = self.loop_load_queue)
+        
+        self.get_from_queue_thread = Thread(target = self.loop_get_queue)
+        
         self.homographer = Homographer()
 
     def enable(self):
@@ -59,9 +69,6 @@ class UART_Handler():
             data = data.split(",")
             data_x = int(data[0])
             data_y = int(data[1])
-            
-        if data_x == 1023 and data_y == 1023:
-            raise ValueError("Invalid Point")
 
         return [data_x, data_y]
 
@@ -78,14 +85,24 @@ class UART_Handler():
                                         [dest_geometry.left(), dest_geometry.bottom()]])
 
         self.transform = self.homographer.get_homography_matrix(self.calib_pts_src, self.calib_pts_dest)
+        
+    def loop_load_queue(self):
+        while True:
+            self.queue.put(self.get_point())
+    
+    def loop_get_queue(self):
+        while True:
+            self.curr_point = self.queue.get()
+    
+    def start_parallel_feed(self):
+        self.load_to_queue_thread.daemon = True
+        self.load_to_queue_thread.start()
 
-            
+        
 if __name__ == "__main__":
     uart_handler = UART_Handler("/dev/ttyS0", 9600)
     # status = uart_handler.pairing()
 
     points = []
 
-    while True:
-        point = uart_handler.get_point()
-        print(point)
+    uart_handler.start_parallel_feed()

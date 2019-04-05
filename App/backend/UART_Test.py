@@ -6,6 +6,7 @@ import time
 
 if __name__ == "__main__":
     uart_handler = UART_Handler("/dev/ttyS0", 9600)
+    uart_handler.start_parallel_feed()
     # status = uart_handler.pairing()
     
     fig = plt.figure()
@@ -25,7 +26,7 @@ if __name__ == "__main__":
     def update(i):
         point = None
         try:
-            point = uart_handler.get_point()
+            point = uart_handler.queue.get()
         except ValueError as e:
             return [sc]
         
@@ -35,10 +36,3 @@ if __name__ == "__main__":
 
     ani = animation.FuncAnimation(fig, update, init_func=init, interval=4, blit=True)
     plt.show()
-    
-    
-    """
-    while True:
-        point = uart_handler.get_point()
-        print(point)
-    """
