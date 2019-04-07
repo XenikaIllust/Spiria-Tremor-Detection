@@ -3,21 +3,53 @@ import time
 import queue
 # import cv2
 import numpy as np
-from Homographer import *
+# from Homographer import *
 from threading import Thread
+from functools import partial
 
-class UART_Handler():
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+
+class UART_Handler(QObject):
+    point_ready = pyqtSignal()
+    
+    class PutQueueThread(QThread):
+        def __init__(self, parent):
+            super().__init__()
+            self.parent = parent
+            
+        def run(self):
+            while True:
+                self.parent.queue.put(self.parent.get_point())
+            
+    class GetQueueThread(QThread):
+        def __init__(self, parent):
+            super().__init__()
+            self.parent = parent
+            
+        def run(self):
+            while True:
+                self.parent.curr_point = self.parent.queue.get()
+                self.parent.point_ready.emit()
+                # tablet_event = PointReadyEvent(self.parent.curr_point)
+                # tablet_event = QMouseEvent(QEvent.MouseButtonPress, QPoint(0, 0), 0, Qt.LeftButton, Qt.NoModifier)
+                # status = QCoreApplication.postEvent(self.parent, tablet_event)
+                # QCoreApplication.sendPostedEvents(self.parent, 0)
+    
     def __init__(self, portname, baudrate):
+        super().__init__()
         self.ser = serial.Serial(port=portname, baudrate=baudrate, timeout=1, write_timeout=1)
         self.queue = queue.Queue()
         
         self.curr_point = None
         
-        self.load_to_queue_thread = Thread(target = self.loop_load_queue)
+        self.put_queue_thread = self.PutQueueThread(self)
+        self.get_queue_thread = self.GetQueueThread(self)
         
-        self.get_from_queue_thread = Thread(target = self.loop_get_queue)
+        self.start_parallel_feed()
         
-        self.homographer = Homographer()
+        # self.homographer = Homographer()
 
     def enable(self):
         self.ser.open()
@@ -47,8 +79,6 @@ class UART_Handler():
             except:
                 pass
             
-            print(data)
-            
             if data == "":
                 timeout = True
 
@@ -70,7 +100,7 @@ class UART_Handler():
             data_x = int(data[0])
             data_y = int(data[1])
 
-        return [data_x, data_y]
+        return (data_x, data_y)
 
     def calibration(self, dest_geometry):
         self.calib_pts_src = np.array([])
@@ -84,8 +114,9 @@ class UART_Handler():
                                         [dest_geometry.right(), dest_geometry.bottom()],
                                         [dest_geometry.left(), dest_geometry.bottom()]])
 
-        self.transform = self.homographer.get_homography_matrix(self.calib_pts_src, self.calib_pts_dest)
-        
+        # self.transform = self.homographer.get_homography_matrix(self.calib_pts_src, self.calib_pts_dest)
+    
+    """
     def loop_load_queue(self):
         while True:
             self.queue.put(self.get_point())
@@ -93,16 +124,18 @@ class UART_Handler():
     def loop_get_queue(self):
         while True:
             self.curr_point = self.queue.get()
+            self.point_ready.emit()
+    """
     
     def start_parallel_feed(self):
-        self.load_to_queue_thread.daemon = True
-        self.load_to_queue_thread.start()
-
+        self.put_queue_thread.start()
+        self.get_queue_thread.start()
         
-if __name__ == "__main__":
-    uart_handler = UART_Handler("/dev/ttyS0", 9600)
-    # status = uart_handler.pairing()
-
-    points = []
-
-    uart_handler.start_parallel_feed()
+    """
+    def customEvent(self, event):
+        print("event running")
+        print(event)
+        if event.type == QEvent:
+            print("signal triggered")
+            print(event.point)
+    """

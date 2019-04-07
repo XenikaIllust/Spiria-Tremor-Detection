@@ -20,7 +20,7 @@ class Spiral_Painter(QWidget):
         # palette = QPalette()
         # palette.setBrush(QPalette.Background, QBrush(QPixmap("../assets/images/logo.png").scaled(self.width(), self.height(), Qt.KeepAspectRatio)))
         # self.setPalette(palette)
-        self.pixmap = QPixmap("../assets/images/test_homography.jpg").scaled(self.width(), self.height(), Qt.KeepAspectRatio)
+        self.pixmap = QPixmap("assets/images/test_homography.jpg").scaled(self.width(), self.height(), Qt.KeepAspectRatio)
         self.image = QLabel(self)
         self.image.setPixmap(self.pixmap.scaled(self.width(), self.height(), Qt.KeepAspectRatio))
 
@@ -54,7 +54,20 @@ class Spiral_Painter(QWidget):
                 painter.drawLine(self.points[ind], self.points[ind+1])
             painter.end()
         print("canvas repainted")
-
+        
+    def add_point(self, point):
+        print("point: " + str(point))
+        
+        if point == None:
+            return
+        
+        if self.last_pos == None:
+            self.last_pos = QPoint(point)
+            
+        self.curr_pos = QPoint(point)
+        self.update()
+        
+    """
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
             self.draw_enabled = True
@@ -75,6 +88,13 @@ class Spiral_Painter(QWidget):
         if event.button() == Qt.LeftButton and self.draw_enabled:
             print("Mouse release: ", event.pos())
             self.draw_enabled = False
+    """
+    
+    """
+    
+    def update_point(self):
+        pass
+    """
 
 """
 class penActiveEvent(QEvent):
