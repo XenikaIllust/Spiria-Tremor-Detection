@@ -5,18 +5,19 @@ from PyQt5.QtCore import QThread
     Backend Engine for Spiria Raspberry Pi-based Application
 """
 
-TITLE_STATE = 0
-SPIRAL_PAIRING_STATE = 1
-SPIRAL_TEST_STATE = 2
-SPIRAL_FINISHED_STATE = 3
-TREMOR_PAIRING_STATE = 4
-TREMOR_TEST_START_STATE = 5
-TREMOR_TEST_STATE = 6
-TREMOR_FINISHED_STATE = 7
-QUESTIONNAIRE_STATE = 8
-COMPLETE_STATE = 9
+CALIBRATION_STATE = 0
+TITLE_STATE = 1
+SPIRAL_PAIRING_STATE = 2
+SPIRAL_TEST_STATE = 3
+SPIRAL_FINISHED_STATE = 4
+TREMOR_PAIRING_STATE = 5
+TREMOR_TEST_START_STATE = 6
+TREMOR_TEST_STATE = 7
+TREMOR_FINISHED_STATE = 8
+QUESTIONNAIRE_STATE = 9
+COMPLETE_STATE = 10
 
-STATE_COUNT = 10
+STATE_COUNT = 12
 
 class Tremor_Display_Timer():
     def __init__(self, tremor_time_text):
@@ -61,14 +62,14 @@ class StateMachine():
     def __init__(self, ui, backend):
         self.ui = ui
         self.backend = backend
-        self.backend.uart_handler.point_ready.connect(partial(self.ui.spiral_test_drawing_widget.update_point, self.backend.uart_handler.curr_point))
+        # self.backend.uart_handler.point_ready.connect(partial(self.ui.spiral_test_drawing_widget.update_point, self.backend.uart_handler.curr_point))
         
         self.tremor_timer = Tremor_Display_Timer(self.ui.tremor_time_text)
         self.threaded_tremor_test = Threaded_Tremor_Test(self.backend)
         
         self.set_button_actions()
         self.state = None
-        self.set_state(TITLE_STATE)
+        self.set_state(CALIBRATION_STATE)
 
         self.paired = False
 
@@ -81,10 +82,12 @@ class StateMachine():
         return self.state
 
     def set_button_actions(self):
+        self.ui.camera_widget.set_camera(self.backend.camera)
+        
         self.ui.start_button.clicked.connect(partial(self.set_state, SPIRAL_PAIRING_STATE))
 
         # enable if UART not available
-        # self.ui.spiral_pairing_start_button.clicked.connect(partial(self.set_state, SPIRAL_TEST_STATE))
+        self.ui.spiral_pairing_start_button.clicked.connect(partial(self.set_state, SPIRAL_TEST_STATE))
 
         # enable if UART available
         # self.ui.spiral_pairing_start_button.clicked.connect(self.spiral_pairing)

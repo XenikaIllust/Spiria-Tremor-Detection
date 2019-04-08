@@ -4,6 +4,7 @@ from PyQt5.QtGui import *
 
 from engine import *
 from frontend.Spiral_Painter import Spiral_Painter
+from frontend.Camera_Widget import Camera_Widget
 
 PAGE_COUNT = STATE_COUNT
 
@@ -43,6 +44,10 @@ class Ui_MainWindow(object):
 
         self.stacked_widget = QStackedWidget(self.frame)
         self.stacked_widget.setGeometry(self.frame.geometry())
+        
+        self.calibration_screen = QWidget()
+        self.calibration_screen.setGeometry(self.frame.geometry())
+        self.setup_calibration_screen()
 
         self.title_screen = QWidget()
         self.title_screen.setGeometry(self.frame.geometry())
@@ -84,6 +89,7 @@ class Ui_MainWindow(object):
         self.complete_screen.setGeometry(self.frame.geometry())
         self.setup_complete_screen()
 
+        self.stacked_widget.addWidget(self.calibration_screen)
         self.stacked_widget.addWidget(self.title_screen)
         self.stacked_widget.addWidget(self.spiral_pairing_screen)
         self.stacked_widget.addWidget(self.spiral_test_screen)
@@ -108,22 +114,34 @@ class Ui_MainWindow(object):
         self.exit_button.setText("Exit")
 
         print(self.stacked_widget.currentIndex())
+        
+    def setup_calibration_screen(self):
+        calibration_widget = QWidget(self.calibration_screen)
+        calibration_widget.setGeometry(QRect(self.frame.geometry().width() // 3, self.frame.geometry().height() * 0.1, self.frame.geometry().width() // 3, self.frame.geometry().height() * 0.8))
+        calibration_widget.setObjectName("calibration_widget")
+        
+        calibration_layout = QHBoxLayout(calibration_widget)
+        
+        self.camera_widget = Camera_Widget()
+        self.camera_widget.setObjectName("spiral_test_drawing_widget")
+        self.camera_widget.setGeometry(calibration_widget.geometry())
+        calibration_layout.addWidget(self.camera_widget)
 
     def setup_title_screen(self):
-        title_layout_widget = QWidget(self.title_screen)
-        title_layout_widget.setGeometry(QRect(self.frame.geometry().width() // 3, self.frame.geometry().height() * 0.1, self.frame.geometry().width() // 3, self.frame.geometry().height() * 0.8))
-        title_layout_widget.setObjectName("title_layout_widget")
+        title_widget = QWidget(self.title_screen)
+        title_widget.setGeometry(QRect(self.frame.geometry().width() // 3, self.frame.geometry().height() * 0.1, self.frame.geometry().width() // 3, self.frame.geometry().height() * 0.8))
+        title_widget.setObjectName("title_layout_widget")
 
-        title_layout = QVBoxLayout(title_layout_widget)
+        title_layout = QVBoxLayout(title_widget)
 
         pixmap = QPixmap("./assets/images/logo.png")
-        logo = QLabel(title_layout_widget)
+        logo = QLabel(title_widget)
         logo.setObjectName("logo")
-        logo.setGeometry(title_layout_widget.geometry())
+        logo.setGeometry(title_widget.geometry())
         logo.setPixmap(pixmap.scaled(logo.width(), logo.height(), Qt.KeepAspectRatio))
         title_layout.addWidget(logo)
 
-        self.start_button = QPushButton(title_layout_widget)
+        self.start_button = QPushButton(title_widget)
         self.start_button.setObjectName("start_button")
         self.start_button.setText("Begin")
         title_layout.addWidget(self.start_button)
