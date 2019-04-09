@@ -93,6 +93,8 @@ class StateMachine():
         # self.ui.spiral_pairing_start_button.clicked.connect(self.spiral_pairing)
         # self.ui.spiral_pairing_failed_button.clicked.connect(partial(self.set_state, SPIRAL_PAIRING_STATE))
         # self.ui.spiral_pairing_continue_button.clicked.connect(partial(self.set_state, SPIRAL_TEST_STATE))
+        
+        self.ui.spiral_painter.set_paint_device(self.backend.uart_handler)
 
         self.ui.spiral_next_button.clicked.connect(partial(self.set_state, TREMOR_PAIRING_STATE))
         self.ui.spiral_save_exit_button.clicked.connect(partial(self.set_state, TITLE_STATE))

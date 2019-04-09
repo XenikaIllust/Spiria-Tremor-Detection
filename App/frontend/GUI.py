@@ -201,10 +201,10 @@ class Ui_MainWindow(object):
         spiral_test_text.setReadOnly(True)
         spiral_test_layout.addWidget(spiral_test_text)
 
-        self.spiral_test_drawing_widget = Spiral_Painter()
-        self.spiral_test_drawing_widget.setObjectName("spiral_test_drawing_widget")
-        self.spiral_test_drawing_widget.setGeometry(spiral_test_layout_widget.geometry())
-        spiral_test_layout.addWidget(self.spiral_test_drawing_widget)
+        self.spiral_painter = Spiral_Painter()
+        self.spiral_painter.setObjectName("spiral_painter")
+        self.spiral_painter.setGeometry(spiral_test_layout_widget.geometry())
+        spiral_test_layout.addWidget(self.spiral_painter)
 
     def setup_tremor_pairing_screen(self):
         tremor_pairing_layout_widget = QWidget(self.tremor_pairing_screen)
@@ -531,6 +531,7 @@ class Ui_MainWindow(object):
         complete_text = QLineEdit(complete_layout_widget)
         complete_text.setObjectName("complete_text")
         complete_text.setText("Test finished. Thank you for using Spiria")
+        complete_text.setReadOnly(True)
 
         self.complete_button = QPushButton(complete_layout_widget)
         self.complete_button.setObjectName("complete_button")

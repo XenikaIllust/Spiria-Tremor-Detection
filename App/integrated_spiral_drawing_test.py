@@ -28,8 +28,7 @@ class Integrated_Spiral_Painter(Spiral_Painter):
         if point == None:
             return
         
-        point = QPoint(point[0], point[1])
-        print(point)
+        point = QPoint(point[0], 1023 - point[1])
         
         if self.last_pos == None:
             self.last_pos = point
@@ -41,7 +40,7 @@ class Integrated_Spiral_Painter(Spiral_Painter):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     integrated_spiral_painter = Integrated_Spiral_Painter()
-    integrated_spiral_painter.setGeometry(400,400,1000,1000)
+    integrated_spiral_painter.setGeometry(0,0,693,660)
     integrated_spiral_painter.show()
     app.exec_()
     # status = uart_handler.pairing()

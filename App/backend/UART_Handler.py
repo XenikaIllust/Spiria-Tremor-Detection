@@ -22,6 +22,7 @@ class UART_Handler(QObject):
         def run(self):
             while True:
                 self.parent.queue.put(self.parent.get_point())
+                # print("qsize: " + str(self.parent.queue.qsize()))
             
     class GetQueueThread(QThread):
         def __init__(self, parent):
@@ -32,10 +33,6 @@ class UART_Handler(QObject):
             while True:
                 self.parent.curr_point = self.parent.queue.get()
                 self.parent.point_ready.emit()
-                # tablet_event = PointReadyEvent(self.parent.curr_point)
-                # tablet_event = QMouseEvent(QEvent.MouseButtonPress, QPoint(0, 0), 0, Qt.LeftButton, Qt.NoModifier)
-                # status = QCoreApplication.postEvent(self.parent, tablet_event)
-                # QCoreApplication.sendPostedEvents(self.parent, 0)
     
     def __init__(self, portname, baudrate):
         super().__init__()
@@ -85,8 +82,6 @@ class UART_Handler(QObject):
             if data == "pairdone":
                 paired = True
 
-            # time.sleep(0.001)
-
         if paired == True:
             return True
 
@@ -99,8 +94,8 @@ class UART_Handler(QObject):
             data = data.split(",")
             data_x = int(data[0])
             data_y = int(data[1])
-
-        return (data_x, data_y)
+            
+            return (data_x, data_y)
 
     def calibration(self, dest_geometry):
         self.calib_pts_src = np.array([])
@@ -116,26 +111,6 @@ class UART_Handler(QObject):
 
         # self.transform = self.homographer.get_homography_matrix(self.calib_pts_src, self.calib_pts_dest)
     
-    """
-    def loop_load_queue(self):
-        while True:
-            self.queue.put(self.get_point())
-    
-    def loop_get_queue(self):
-        while True:
-            self.curr_point = self.queue.get()
-            self.point_ready.emit()
-    """
-    
     def start_parallel_feed(self):
         self.put_queue_thread.start()
         self.get_queue_thread.start()
-        
-    """
-    def customEvent(self, event):
-        print("event running")
-        print(event)
-        if event.type == QEvent:
-            print("signal triggered")
-            print(event.point)
-    """

@@ -20,18 +20,20 @@ class Spiral_Painter(QWidget):
         # palette = QPalette()
         # palette.setBrush(QPalette.Background, QBrush(QPixmap("../assets/images/logo.png").scaled(self.width(), self.height(), Qt.KeepAspectRatio)))
         # self.setPalette(palette)
-        self.pixmap = QPixmap("assets/images/test_homography.jpg").scaled(self.width(), self.height(), Qt.KeepAspectRatio)
+        self.pixmap = QPixmap("assets/images/template.jpg")
+        self.resize(self.pixmap.width(), self.pixmap.height())
         self.image = QLabel(self)
         self.image.setPixmap(self.pixmap.scaled(self.width(), self.height(), Qt.KeepAspectRatio))
 
         self.canvas = QLabel(self)
         self.canvas_pixmap = QPixmap(self.width(), self.height()).scaled(self.width(), self.height(), Qt.KeepAspectRatio)
-        print(self.canvas_pixmap)
         self.canvas_pixmap.fill(Qt.transparent)
         self.canvas.setPixmap(self.canvas_pixmap)
-
-        self.canvas.setMouseTracking(True)
-        self.setMouseTracking(True)
+        
+    def set_paint_device(self, device):
+        self.device = device
+        self.device.point_ready.connect(self.add_point)
+        self.device.start_parallel_feed()
 
     def paintEvent(self, event):
         self.canvas.pixmap().fill(Qt.transparent)
@@ -42,6 +44,7 @@ class Spiral_Painter(QWidget):
             cursor_painter.setPen(Qt.blue)
             cursor_painter.setBrush(Qt.blue)
             cursor_painter.drawEllipse(self.curr_pos, 5, 5)
+            cursor_painter.drawText(QPoint(self.geometry().left() + 10, self.geometry().top() + 10), "pos: " + str(self.curr_pos))
             cursor_painter.end()
 
         if self.last_pos != None:
@@ -53,60 +56,20 @@ class Spiral_Painter(QWidget):
             for ind in range(0, len(self.points)-1):
                 painter.drawLine(self.points[ind], self.points[ind+1])
             painter.end()
-        print("canvas repainted")
         
-    def add_point(self, point):
-        print("point: " + str(point))
+    def add_point(self):
+        point = self.device.curr_point
         
         if point == None:
             return
         
-        if self.last_pos == None:
-            self.last_pos = QPoint(point)
-            
-        self.curr_pos = QPoint(point)
-        self.update()
+        point = QPoint(point[0], point[1])
         
-    """
-    def mousePressEvent(self, event):
-        if event.button() == Qt.LeftButton:
-            self.draw_enabled = True
-            print("Mouse press: ", event.pos())
-            self.last_pos = event.pos()
-            # self.repaint()
+        if self.last_pos == None:
+            self.last_pos = point
+            
+        self.curr_pos = point
         self.update()
-
-    def mouseMoveEvent(self, event):
-        self.curr_pos = event.pos()
-        print("Mouse move: ", event.pos())
-        if self.draw_enabled:
-            self.last_pos = event.pos()
-            print("Mouse move painted: ", event.pos())
-        self.update()
-
-    def mouseReleaseEvent(self, event):
-        if event.button() == Qt.LeftButton and self.draw_enabled:
-            print("Mouse release: ", event.pos())
-            self.draw_enabled = False
-    """
-    
-    """
-    
-    def update_point(self):
-        pass
-    """
-
-"""
-class penActiveEvent(QEvent):
-    EVENT_TYPE = QEvent.type(QEvent.registerEventType())
-
-    def __init__(self):
-        super(penActiveEvent, self).__init__(self.EVENT_TYPE)
-
-    def pos(self):
-        pass
-"""
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
