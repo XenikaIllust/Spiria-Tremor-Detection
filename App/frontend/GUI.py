@@ -368,8 +368,8 @@ class Ui_MainWindow(object):
         question1_text.setReadOnly(True)
         question1_layout.addWidget(question1_text)
 
-        question1_buttonlayout = QHBoxLayout(questionnaire_layout_widget)
-        questionnaire_layout.addLayout(question1_buttonlayout)
+        question1_buttonlayout = QHBoxLayout()
+        question1_layout.addLayout(question1_buttonlayout)
 
         question1_button0 = QRadioButton()
         question1_button0.setText("Yes")
@@ -382,11 +382,16 @@ class Ui_MainWindow(object):
         question1_button2 = QRadioButton()
         question1_button2.setText("No")
         question1_button2.setChecked(True)
+        
+        question1_buttongroup = QButtonGroup(questionnaire_layout_widget)
+        question1_buttongroup.setExclusive(True)
+        question1_buttongroup.addButton(question1_button0, 0)
+        question1_buttongroup.addButton(question1_button1, 1)
+        question1_buttongroup.addButton(question1_button2, 2)
 
         question1_buttonlayout.addWidget(question1_button0)
         question1_buttonlayout.addWidget(question1_button1)
         question1_buttonlayout.addWidget(question1_button2)
-
 
         question2_layout = QVBoxLayout()
         questionnaire_layout.addLayout(question2_layout)
@@ -398,7 +403,7 @@ class Ui_MainWindow(object):
         question2_layout.addWidget(question2_text)
 
         question2_buttonlayout = QHBoxLayout(questionnaire_layout_widget)
-        questionnaire_layout.addLayout(question2_buttonlayout)
+        question2_layout.addLayout(question2_buttonlayout)
 
         question2_button0 = QRadioButton()
         question2_button0.setText("Yes")
@@ -411,6 +416,12 @@ class Ui_MainWindow(object):
         question2_button2 = QRadioButton()
         question2_button2.setText("No")
         question2_button2.setChecked(True)
+        
+        question2_buttongroup = QButtonGroup(questionnaire_layout_widget)
+        question2_buttongroup.setExclusive(True)
+        question2_buttongroup.addButton(question2_button0, 0)
+        question2_buttongroup.addButton(question2_button1, 1)
+        question2_buttongroup.addButton(question2_button2, 2)
 
         question2_buttonlayout.addWidget(question2_button0)
         question2_buttonlayout.addWidget(question2_button1)
@@ -427,7 +438,7 @@ class Ui_MainWindow(object):
         question3_layout.addWidget(question3_text)
 
         question3_buttonlayout = QHBoxLayout(questionnaire_layout_widget)
-        questionnaire_layout.addLayout(question3_buttonlayout)
+        question3_layout.addLayout(question3_buttonlayout)
 
         question3_button0 = QRadioButton()
         question3_button0.setText("Yes")
@@ -440,6 +451,12 @@ class Ui_MainWindow(object):
         question3_button2 = QRadioButton()
         question3_button2.setText("No")
         question3_button2.setChecked(True)
+        
+        question3_buttongroup = QButtonGroup(questionnaire_layout_widget)
+        question3_buttongroup.setExclusive(True)
+        question3_buttongroup.addButton(question3_button0, 0)
+        question3_buttongroup.addButton(question3_button1, 1)
+        question3_buttongroup.addButton(question3_button2, 2)
 
         question3_buttonlayout.addWidget(question3_button0)
         question3_buttonlayout.addWidget(question3_button1)
@@ -456,7 +473,7 @@ class Ui_MainWindow(object):
         question4_layout.addWidget(question4_text)
 
         question4_buttonlayout = QHBoxLayout(questionnaire_layout_widget)
-        questionnaire_layout.addLayout(question4_buttonlayout)
+        question4_layout.addLayout(question4_buttonlayout)
 
         question4_button0 = QRadioButton()
         question4_button0.setText("Yes")
@@ -465,6 +482,11 @@ class Ui_MainWindow(object):
         question4_button1 = QRadioButton()
         question4_button1.setText("No")
         question4_button1.setChecked(True)
+        
+        question4_buttongroup = QButtonGroup(questionnaire_layout_widget)
+        question4_buttongroup.setExclusive(True)
+        question4_buttongroup.addButton(question4_button0, 0)
+        question4_buttongroup.addButton(question4_button1, 1)
 
         question4_buttonlayout.addWidget(question4_button0)
         question4_buttonlayout.addWidget(question4_button1)
@@ -480,7 +502,7 @@ class Ui_MainWindow(object):
         question5_layout.addWidget(question5_text)
 
         question5_buttonlayout = QHBoxLayout(questionnaire_layout_widget)
-        questionnaire_layout.addLayout(question5_buttonlayout)
+        question5_layout.addLayout(question5_buttonlayout)
 
         question5_button0 = QRadioButton()
         question5_button0.setText("Yes")
@@ -490,6 +512,10 @@ class Ui_MainWindow(object):
         question5_button1.setText("No")
         question5_button1.setChecked(True)
 
+        question5_buttongroup = QButtonGroup(questionnaire_layout_widget)
+        question5_buttongroup.setExclusive(True)
+        question5_buttongroup.addButton(question5_button0, 0)
+        question5_buttongroup.addButton(question5_button1, 1)
 
         question5_buttonlayout.addWidget(question5_button0)
         question5_buttonlayout.addWidget(question5_button1)
@@ -504,7 +530,7 @@ class Ui_MainWindow(object):
         question6_layout.addWidget(question6_text)
 
         question6_buttonlayout = QHBoxLayout(questionnaire_layout_widget)
-        questionnaire_layout.addLayout(question6_buttonlayout)
+        question6_layout.addLayout(question6_buttonlayout)
 
         question6_button0 = QRadioButton()
         question6_button0.setText("Yes")
@@ -513,6 +539,11 @@ class Ui_MainWindow(object):
         question6_button1 = QRadioButton()
         question6_button1.setText("No")
         question6_button1.setChecked(True)
+        
+        question6_buttongroup = QButtonGroup(questionnaire_layout_widget)
+        question6_buttongroup.setExclusive(True)
+        question6_buttongroup.addButton(question6_button0, 0)
+        question6_buttongroup.addButton(question6_button1, 1)
 
         question6_buttonlayout.addWidget(question6_button0)
         question6_buttonlayout.addWidget(question6_button1)
@@ -521,6 +552,10 @@ class Ui_MainWindow(object):
         self.questionnaire_complete_button.setObjectName("questionnaire_complete_button")
         self.questionnaire_complete_button.setText("Submit")
         questionnaire_layout.addWidget(self.questionnaire_complete_button)
+        
+        self.questionnaire_grouped_buttons = [question1_buttongroup, question2_buttongroup,
+                                              question3_buttongroup, question4_buttongroup,
+                                              question5_buttongroup, question6_buttongroup]
 
     def setup_complete_screen(self):
         complete_layout_widget = QWidget(self.complete_screen)
