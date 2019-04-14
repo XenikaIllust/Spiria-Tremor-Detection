@@ -6,6 +6,7 @@ PyQt5
 OpenCV-Python
 Pybluez
 PySerial
+Picamera
 
 To run the app: python3 main.py (However, by default configuration, the Raspberry Pi will be
 configured to boot in kiosk mode.)

@@ -20,9 +20,9 @@ class UART_Handler(QObject):
             self.parent = parent
             
         def run(self):
-            while True:
+            while self.parent.stop != True:
                 self.parent.queue.put(self.parent.get_point())
-                # print("qsize: " + str(self.parent.queue.qsize()))
+            self.parent.stop = True
             
     class GetQueueThread(QThread):
         def __init__(self, parent):
@@ -30,9 +30,10 @@ class UART_Handler(QObject):
             self.parent = parent
             
         def run(self):
-            while True:
+            while self.parent.stop != True:
                 self.parent.curr_point = self.parent.queue.get()
                 self.parent.point_ready.emit()
+            self.parent.stop = True
     
     def __init__(self, portname, baudrate):
         super().__init__()
@@ -40,11 +41,10 @@ class UART_Handler(QObject):
         self.queue = queue.Queue()
         
         self.curr_point = None
+        self.stop = False
         
         self.put_queue_thread = self.PutQueueThread(self)
         self.get_queue_thread = self.GetQueueThread(self)
-        
-        self.start_parallel_feed()
         
         # self.homographer = Homographer()
 
@@ -111,6 +111,9 @@ class UART_Handler(QObject):
 
         # self.transform = self.homographer.get_homography_matrix(self.calib_pts_src, self.calib_pts_dest)
     
-    def start_parallel_feed(self):
+    def start_threads(self):
         self.put_queue_thread.start()
         self.get_queue_thread.start()
+        
+    def kill_threads(self):
+        self.stop = True

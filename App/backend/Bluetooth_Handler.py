@@ -3,9 +3,12 @@ import time
 import re
 import codecs
 
+BT2 = "98:D3:31:FD:8B:99"
+BT4 = "98:D3:51:FD:86:88"
+
 class BluetoothHandler:
     def __init__(self):
-        self.addr = "98:D3:31:FD:8B:99"
+        self.addr = BT4
         self.socket = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
         self.port = 1
         self.socket.connect((self.addr, self.port))
@@ -14,6 +17,7 @@ class BluetoothHandler:
     def getData(self, num_bytes):
             r_data = self.socket.recv(num_bytes)
             # r_data = r_data.decode("utf-8") # convert bytes object to string
+            print(r_data)
             return r_data
 
     def sendData(self, t_data):
@@ -85,7 +89,7 @@ class BluetoothHandler:
 
 if __name__ == "__main__":
     bt_handler = BluetoothHandler()
-    status = bt_handler.pairing()
-    print(status)
+    # status = bt_handler.pairing()
+    # print(status)
     data = bt_handler.tremor_test()
     print(data)

@@ -25,14 +25,24 @@ class Threaded_Camera(QObject):
         time.sleep(0.1)
         
         self.worker = self.Worker(self)
-        self.worker.start()
+        
+        self.stop = False
         
     def get_video_frame(self):
         for frame in self.camera.capture_continuous(self.rawCapture, format='rgb', use_video_port=True):
             self.rawCapture.truncate(0)
+            if self.stop == True:
+                self.stop = False
+                break
+            
             self.frame = frame.array
             self.frame_ready.emit()
-
+            
+    def run_threads(self):
+        self.worker.start()
+            
+    def kill_threads(self):
+        self.stop = True
     
     
     

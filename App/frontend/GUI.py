@@ -120,12 +120,25 @@ class Ui_MainWindow(object):
         calibration_widget.setGeometry(QRect(self.frame.geometry().width() // 3, self.frame.geometry().height() * 0.1, self.frame.geometry().width() // 3, self.frame.geometry().height() * 0.8))
         calibration_widget.setObjectName("calibration_widget")
         
-        calibration_layout = QHBoxLayout(calibration_widget)
+        calibration_layout = QVBoxLayout(calibration_widget)
+        
+        calibration_title_text = QLabel(calibration_widget)
+        calibration_title_text.setText("Calibration")
+        calibration_title_text.setMinimumSize(200, 50)
+        calibration_layout.addWidget(calibration_title_text)
+        
+        calibration_subtitle_text = QLabel(calibration_widget)
+        calibration_subtitle_text.setText("Position the projector's projection in the middle of the camera.")
+        calibration_subtitle_text.setMinimumSize(200, 50)
+        calibration_layout.addWidget(calibration_subtitle_text)
+        
+        calibration_feed_layout = QHBoxLayout(calibration_widget)
+        calibration_layout.addLayout(calibration_feed_layout)
         
         self.camera_widget = Camera_Widget()
         self.camera_widget.setObjectName("spiral_test_drawing_widget")
-        self.camera_widget.setGeometry(calibration_widget.geometry())
-        calibration_layout.addWidget(self.camera_widget)
+        self.camera_widget.setMinimumSize(calibration_widget.geometry().width(), calibration_widget.geometry().height())
+        calibration_feed_layout.addWidget(self.camera_widget)
 
     def setup_title_screen(self):
         title_widget = QWidget(self.title_screen)

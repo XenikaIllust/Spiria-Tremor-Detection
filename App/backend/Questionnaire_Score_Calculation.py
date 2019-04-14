@@ -11,6 +11,3 @@ class Questionnaire_Calculator():
             print("Q" + str(i+1) + ": " + group.button(group.checkedId()).text())
                 
         print("Score: " + str(self.score))
-                
-if __name__ == "__main__":
-    pass  
