@@ -69,6 +69,7 @@ class Spiral_Painter(QWidget):
             self.last_pos = point
             
         self.curr_pos = point
+        self.points.append(self.curr_pos)
         self.update()
 
 if __name__ == '__main__':

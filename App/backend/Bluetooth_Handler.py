@@ -3,12 +3,13 @@ import time
 import re
 import codecs
 
+BT1 = "98:D3:41:FD:42:B8"
 BT2 = "98:D3:31:FD:8B:99"
 BT4 = "98:D3:51:FD:86:88"
 
 class BluetoothHandler:
     def __init__(self):
-        self.addr = BT4
+        self.addr = BT1
         self.socket = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
         self.port = 1
         self.socket.connect((self.addr, self.port))

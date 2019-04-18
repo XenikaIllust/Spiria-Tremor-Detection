@@ -20,7 +20,7 @@ class Integrated_Spiral_Painter(Spiral_Painter):
         # status = uart_handler.pairing()
         
         self.uart_handler.point_ready.connect(self.add_point)
-        self.uart_handler.start_parallel_feed()
+        self.uart_handler.start_threads()
         
     def add_point(self):
         point = self.uart_handler.curr_point
