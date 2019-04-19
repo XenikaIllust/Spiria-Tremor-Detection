@@ -89,9 +89,9 @@ class Ui_MainWindow(object):
         self.complete_screen.setGeometry(self.frame.geometry())
         self.setup_complete_screen()
 
-        self.stacked_widget.addWidget(self.calibration_screen)
         self.stacked_widget.addWidget(self.title_screen)
         self.stacked_widget.addWidget(self.spiral_pairing_screen)
+        self.stacked_widget.addWidget(self.calibration_screen)
         self.stacked_widget.addWidget(self.spiral_test_screen)
         self.stacked_widget.addWidget(self.spiral_complete_test_screen)
         self.stacked_widget.addWidget(self.tremor_pairing_screen)

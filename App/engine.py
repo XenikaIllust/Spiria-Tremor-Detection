@@ -5,9 +5,9 @@ from PyQt5.QtCore import QThread, pyqtSignal, QObject
     Backend Engine for Spiria Raspberry Pi-based Application
 """
 
-CALIBRATION_STATE = 0
-TITLE_STATE = 1
-SPIRAL_PAIRING_STATE = 2
+TITLE_STATE = 0
+SPIRAL_PAIRING_STATE = 1
+SPIRAL_CALIBRATION_STATE = 2
 SPIRAL_TEST_STATE = 3
 SPIRAL_FINISHED_STATE = 4
 TREMOR_PAIRING_STATE = 5
@@ -98,11 +98,12 @@ class StateMachine():
         self.ui = ui
         self.backend = backend
 
-        # uncomment if need to use picam
-        # self.calibration_state = State(CALIBRATION_STATE, self.backend.camera.run_threads, self.backend.camera.kill_threads)
-        self.calibration_state = State(CALIBRATION_STATE, None, None)
         self.title_state = State(TITLE_STATE, None, None)
         self.spiral_pairing_state = State(SPIRAL_PAIRING_STATE, None, None)
+
+        # uncomment if need to use picam
+        # self.calibration_state = State(CALIBRATION_STATE, self.backend.camera.run_threads, self.backend.camera.kill_threads)
+        self.calibration_state = State(SPIRAL_CALIBRATION_STATE, None, None)
         
         # Comment out if UART not enabled
         # self.spiral_test_state = State(SPIRAL_TEST_STATE, self.backend.uart_handler.qthreads)
@@ -117,7 +118,7 @@ class StateMachine():
         self.questionnaire_state = State(QUESTIONNAIRE_STATE, None, None)
         self.complete_state = State(COMPLETE_STATE, None, None)
         
-        self.states = [self.calibration_state, self.title_state, self.spiral_pairing_state,
+        self.states = [self.title_state, self.spiral_pairing_state, self.calibration_state,
                        self.spiral_test_state, self.spiral_finished_state, self.tremor_pairing_state,
                        self.tremor_test_start_state, self.tremor_test_state, self.tremor_finished_state,
                        self.questionnaire_state, self.complete_state]
@@ -129,7 +130,7 @@ class StateMachine():
         
         self.set_button_actions()
         self.state = None
-        self.set_state(CALIBRATION_STATE)
+        self.set_state(TITLE_STATE)
 
         self.paired = False
 
@@ -146,18 +147,19 @@ class StateMachine():
         return self.state
 
     def set_button_actions(self):
-        # self.ui.camera_widget.set_camera(self.backend.camera)
-        
         self.ui.start_button.clicked.connect(partial(self.set_state, SPIRAL_PAIRING_STATE))
 
         # enable if UART not available
-        self.ui.spiral_pairing_start_button.clicked.connect(partial(self.set_state, SPIRAL_TEST_STATE))
+        self.ui.spiral_pairing_start_button.clicked.connect(partial(self.set_state, SPIRAL_CALIBRATION_STATE))
 
         # enable if UART available
         # self.ui.spiral_pairing_start_button.clicked.connect(self.spiral_pairing)
         # self.ui.spiral_pairing_failed_button.clicked.connect(partial(self.set_state, SPIRAL_PAIRING_STATE))
-        # self.ui.spiral_pairing_continue_button.clicked.connect(partial(self.set_state, SPIRAL_TEST_STATE))
+        # self.ui.spiral_pairing_continue_button.clicked.connect(partial(self.set_state, SPIRAL_CALIBRATION_STATE))
         # self.ui.spiral_painter.set_paint_device(self.backend.uart_handler)
+
+        # enable if camera available
+        # self.ui.camera_widget.set_camera(self.backend.camera)
 
         self.ui.spiral_next_button.clicked.connect(partial(self.set_state, TREMOR_PAIRING_STATE))
         self.ui.spiral_save_exit_button.clicked.connect(partial(self.set_state, TITLE_STATE))
@@ -171,6 +173,7 @@ class StateMachine():
         # self.ui.tremor_pairing_continue_button.clicked.connect(partial(self.set_state, TREMOR_TEST_START_STATE))
 
         self.ui.tremor_test_start_button.clicked.connect(partial(self.tremor_timer.timer_start))
+        # enable if bluetooth available
         # self.ui.tremor_test_start_button.clicked.connect(self.threaded_tremor_test.start)
         self.ui.tremor_test_start_button.clicked.connect(partial(self.set_state, TREMOR_TEST_STATE))
 
@@ -178,7 +181,7 @@ class StateMachine():
         self.ui.tremor_save_exit_button.clicked.connect(partial(self.set_state, TITLE_STATE))
 
         self.ui.questionnaire_complete_button.clicked.connect(partial(self.set_state, COMPLETE_STATE))
-        self.ui.questionnaire_complete_button.clicked.connect(partial(self.backend.questionnaire_calculator.calculate_score, \
+        self.ui.questionnaire_complete_button.clicked.connect(partial(self.backend.questionnaire_calculator.calculate_score,
                                                                       self.ui.questionnaire_grouped_buttons))
 
         self.ui.complete_button.clicked.connect(partial(self.set_state, TITLE_STATE))

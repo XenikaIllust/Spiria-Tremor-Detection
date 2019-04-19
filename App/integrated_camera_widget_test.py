@@ -2,8 +2,6 @@ import sys
 from backend.Camera import *
 from frontend.Camera_Widget import *
 
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 if __name__ == "__main__":

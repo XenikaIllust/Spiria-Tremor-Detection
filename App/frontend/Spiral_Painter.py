@@ -1,8 +1,6 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
-import sys
-
 
 class Spiral_Painter(QWidget):
     def __init__(self, parent=None):
@@ -29,7 +27,7 @@ class Spiral_Painter(QWidget):
         self.canvas_pixmap = QPixmap(self.width(), self.height()).scaled(self.width(), self.height(), Qt.KeepAspectRatio)
         self.canvas_pixmap.fill(Qt.transparent)
         self.canvas.setPixmap(self.canvas_pixmap)
-        
+
     def set_paint_device(self, device):
         self.device = device
         self.device.point_ready.connect(self.add_point)
@@ -73,6 +71,7 @@ class Spiral_Painter(QWidget):
         self.update()
 
 if __name__ == '__main__':
+    import sys
     app = QApplication(sys.argv)
     spiral_painter = Spiral_Painter()
     spiral_painter.setGeometry(400,400,400,400)
