@@ -97,8 +97,10 @@ class StateMachine():
     def __init__(self, ui, backend):
         self.ui = ui
         self.backend = backend
-        
-        self.calibration_state = State(CALIBRATION_STATE, self.backend.camera.run_threads, self.backend.camera.kill_threads)
+
+        # uncomment if need to use picam
+        # self.calibration_state = State(CALIBRATION_STATE, self.backend.camera.run_threads, self.backend.camera.kill_threads)
+        self.calibration_state = State(CALIBRATION_STATE, None, None)
         self.title_state = State(TITLE_STATE, None, None)
         self.spiral_pairing_state = State(SPIRAL_PAIRING_STATE, None, None)
         
@@ -144,7 +146,7 @@ class StateMachine():
         return self.state
 
     def set_button_actions(self):
-        self.ui.camera_widget.set_camera(self.backend.camera)
+        # self.ui.camera_widget.set_camera(self.backend.camera)
         
         self.ui.start_button.clicked.connect(partial(self.set_state, SPIRAL_PAIRING_STATE))
 

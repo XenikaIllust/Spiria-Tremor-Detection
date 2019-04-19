@@ -25,6 +25,11 @@
     background-color: transparent;
 }
 
+#tremor_time_text {
+    font-family: "Montserrat";
+    font-size: 80px;
+}
+
 QLineEdit {
     border: solid transparent;
     background: transparent;
