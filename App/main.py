@@ -40,7 +40,7 @@ class Spiria_App(QWidget):
 def run():
     import sys
     app = QApplication(sys.argv)
-    file = QFile("./styles/title_screen.qss")
+    file = QFile("./styles/app.qss")
     file.open(QFile.ReadOnly | QFile.Text)
     stream = QTextStream(file)
     app.setStyleSheet(stream.readAll())

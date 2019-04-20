@@ -3,17 +3,31 @@
     border-style: none;
 }
 
+/*#frame {
+    background-color: blue;
+}*/
+
 #version {
     border: solid transparent;
     background: transparent;
     color: white;
 }
 
-#calibration_canvas {
-    background-color: white;
+#calibration_title_text {
+    font-family: "Montserrat SemiBold";
+    font-style: Semi-Bold;
+    font-size: 60px;
+    color: white;
 }
 
-#camera_widget {
+#calibration_subtitle_text {
+    font-family: "Montserrat Regular";
+    font-style: normal;
+    font-size: 40px;
+    color: white;
+}
+
+#calibration_canvas {
     background-color: white;
 }
 

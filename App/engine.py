@@ -43,11 +43,9 @@ class Thread_Sentinel(QObject):
         
     def run_all_threads(self):
         self.run_threads.emit()
-        print("running all threads")
     
     def kill_all_threads(self):
         self.kill_threads.emit()
-        print("killed all threads")
 
 class Tremor_Display_Timer():
     def __init__(self, tremor_time_text):
@@ -102,8 +100,8 @@ class StateMachine():
         self.spiral_pairing_state = State(SPIRAL_PAIRING_STATE, None, None)
 
         # uncomment if need to use picam
-        # self.calibration_state = State(CALIBRATION_STATE, self.backend.camera.run_threads, self.backend.camera.kill_threads)
-        self.calibration_state = State(SPIRAL_CALIBRATION_STATE, None, None)
+        self.calibration_state = State(SPIRAL_CALIBRATION_STATE, self.backend.camera.run_threads, self.backend.camera.kill_threads)
+        # self.calibration_state = State(SPIRAL_CALIBRATION_STATE, None, None)
         
         # Comment out if UART not enabled
         # self.spiral_test_state = State(SPIRAL_TEST_STATE, self.backend.uart_handler.qthreads)
@@ -159,7 +157,7 @@ class StateMachine():
         # self.ui.spiral_painter.set_paint_device(self.backend.uart_handler)
 
         # enable if camera available
-        # self.ui.camera_widget.set_camera(self.backend.camera)
+        self.ui.camera_widget.set_camera(self.backend.camera)
 
         self.ui.spiral_next_button.clicked.connect(partial(self.set_state, TREMOR_PAIRING_STATE))
         self.ui.spiral_save_exit_button.clicked.connect(partial(self.set_state, TITLE_STATE))

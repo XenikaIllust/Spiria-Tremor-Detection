@@ -22,7 +22,7 @@ class Ui_MainWindow(object):
 
         font_db = QFontDatabase()
         font_db.addApplicationFont("./assets/fonts/Montserrat-SemiBold.ttf")
-        #font_db.addApplicationFont("./assets/fonts/Montserrat-Regular.ttf")
+        font_db.addApplicationFont("./assets/fonts/Montserrat-Regular.ttf")
         #font_db.addApplicationFont("./assets/fonts/Montserrat-Medium.ttf")
         #font_db.addApplicationFont("./assets/fonts/Montserrat-Black.ttf")
         #font_db.addApplicationFont("./assets/fonts/Montserrat-Bold.ttf")
@@ -36,30 +36,32 @@ class Ui_MainWindow(object):
         self.frame.setGeometry(QRect(HORIZONTAL_BORDERSIZE, VERTICAL_BORDERSIZE,
                                      self.fullscreen_dimensions.width() - 2 * HORIZONTAL_BORDERSIZE,
                                      self.fullscreen_dimensions.height() - 2 * VERTICAL_BORDERSIZE))
+        self.frame.setObjectName("frame")
 
         self.version = QLineEdit(self.frame)
         self.version.move(self.frame.geometry().left(), self.frame.geometry().height() - self.version.height())
         self.version.setObjectName("version")
-        self.version.setText("King Cobra v3.0")
+        self.version.setText("Water Moccassin v1.0b")
         self.version.setReadOnly(True)
 
         self.stacked_widget = QStackedWidget(self.frame)
-        self.stacked_widget.setGeometry(self.frame.geometry())
+        self.stacked_widget.setObjectName("stacked_widget")
+        self.stacked_widget.resize(self.frame.size())
         
         self.calibration_screen = QWidget()
-        self.calibration_screen.setGeometry(self.frame.geometry())
+        self.calibration_screen.resize(self.frame.size())
         self.setup_calibration_screen()
 
         self.title_screen = QWidget()
-        self.title_screen.setGeometry(self.frame.geometry())
+        self.title_screen.resize(self.frame.size())
         self.setup_title_screen()
 
         self.spiral_pairing_screen = QWidget()
-        self.spiral_pairing_screen.setGeometry(self.frame.geometry())
+        self.spiral_pairing_screen.resize(self.frame.size())
         self.setup_spiral_pairing_screen()
 
         self.spiral_test_screen = QWidget()
-        self.spiral_test_screen.setGeometry(self.frame.geometry())
+        self.spiral_test_screen.resize(self.frame.size())
         self.setup_spiral_test_screen()
 
         self.spiral_complete_test_screen = QWidget()
@@ -118,25 +120,28 @@ class Ui_MainWindow(object):
         
     def setup_calibration_screen(self):
         calibration_widget = QWidget(self.calibration_screen)
-        calibration_widget.setGeometry(QRect(self.frame.geometry().width() // 3, self.frame.geometry().height() * 0.1, self.frame.geometry().width() // 3, self.frame.geometry().height() * 0.8))
+        calibration_widget.resize(self.calibration_screen.size())
         calibration_widget.setObjectName("calibration_widget")
         
         calibration_layout = QVBoxLayout(calibration_widget)
         
-        calibration_title_text = QLineEdit(calibration_widget)
+        calibration_title_text = QLabel(calibration_widget)
         calibration_title_text.setText("Calibration")
-        calibration_title_text.setReadOnly(True)
+        calibration_title_text.setObjectName("calibration_title_text")
         calibration_layout.addWidget(calibration_title_text)
         
-        calibration_subtitle_text = QLineEdit(calibration_widget)
+        calibration_subtitle_text = QLabel(calibration_widget)
         calibration_subtitle_text.setText("Position the projector's projection in the middle of the camera.")
-        calibration_subtitle_text.setReadOnly(True)
+        calibration_subtitle_text.setObjectName("calibration_subtitle_text")
         calibration_layout.addWidget(calibration_subtitle_text)
 
         self.calibration_canvas = QWidget(calibration_widget)
         self.calibration_canvas.setObjectName("calibration_canvas")
         calibration_layout.addWidget(self.calibration_canvas)
+        
         calibration_canvas_layout = QGridLayout()
+        calibration_canvas_layout.setColumnMinimumWidth(0, 10)
+        calibration_canvas_layout.setColumnMinimumWidth(2, 100)
         self.calibration_canvas.setLayout(calibration_canvas_layout)
         
         self.camera_widget = Camera_Widget(calibration_widget)
@@ -149,11 +154,7 @@ class Ui_MainWindow(object):
         self.calibration_aid_widget.setObjectName("calibration_aid_widget")
         # self.calibration_aid_widget.setMinimumSize(calibration_widget.geometry().width(), calibration_widget.geometry().height())
 
-        self.camera_widget.setMinimumSize(min(self.camera_widget.width(), self.calibration_aid_widget.width()),
-                                          min(self.camera_widget.height(), self.calibration_aid_widget.height()))
-        self.calibration_aid_widget.setMinimumSize(min(self.camera_widget.width(), self.calibration_aid_widget.width()),
-                                                   min(self.camera_widget.height(), self.calibration_aid_widget.height()))
-
+        # calibration_layout.addWidget(self.camera_widget)
         calibration_canvas_layout.addWidget(self.camera_widget, 1, 1)
         calibration_canvas_layout.addWidget(self.calibration_aid_widget, 1, 3)
 
@@ -167,7 +168,7 @@ class Ui_MainWindow(object):
         pixmap = QPixmap("./assets/images/logo.png")
         logo = QLabel(title_widget)
         logo.setObjectName("logo")
-        logo.setGeometry(title_widget.geometry())
+        logo.resize(title_widget.size())
         logo.setPixmap(pixmap.scaled(logo.width(), logo.height(), Qt.KeepAspectRatio))
         title_layout.addWidget(logo)
 
@@ -215,7 +216,7 @@ class Ui_MainWindow(object):
 
     def setup_spiral_test_screen(self):
         spiral_test_layout_widget = QWidget(self.spiral_test_screen)
-        spiral_test_layout_widget.setGeometry(self.frame.geometry())
+        spiral_test_layout_widget.resize(self.spiral_test_screen.size())
 
         spiral_test_layout = QVBoxLayout(spiral_test_layout_widget)
 
