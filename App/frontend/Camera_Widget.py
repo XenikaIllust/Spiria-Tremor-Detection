@@ -3,9 +3,9 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
 class Camera_Widget(QWidget):
-    def __init__(self):
-        super().__init__()
-        
+    def __init__(self, parent=None):
+        super(QWidget, self).__init__(parent)
+        self.setMinimumSize(320, 240)
         self.label = QLabel(self)
         self.label.setGeometry(self.geometry())
         

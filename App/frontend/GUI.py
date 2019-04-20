@@ -5,6 +5,7 @@ from PyQt5.QtGui import *
 from engine import *
 from frontend.Spiral_Painter import Spiral_Painter
 from frontend.Camera_Widget import Camera_Widget
+from frontend.Calibration_Widget import Calibration_Widget
 
 PAGE_COUNT = STATE_COUNT
 
@@ -122,23 +123,39 @@ class Ui_MainWindow(object):
         
         calibration_layout = QVBoxLayout(calibration_widget)
         
-        calibration_title_text = QLabel(calibration_widget)
+        calibration_title_text = QLineEdit(calibration_widget)
         calibration_title_text.setText("Calibration")
-        calibration_title_text.setMinimumSize(200, 50)
+        calibration_title_text.setReadOnly(True)
         calibration_layout.addWidget(calibration_title_text)
         
-        calibration_subtitle_text = QLabel(calibration_widget)
+        calibration_subtitle_text = QLineEdit(calibration_widget)
         calibration_subtitle_text.setText("Position the projector's projection in the middle of the camera.")
-        calibration_subtitle_text.setMinimumSize(200, 50)
+        calibration_subtitle_text.setReadOnly(True)
         calibration_layout.addWidget(calibration_subtitle_text)
+
+        self.calibration_canvas = QWidget(calibration_widget)
+        self.calibration_canvas.setObjectName("calibration_canvas")
+        calibration_layout.addWidget(self.calibration_canvas)
+        calibration_canvas_layout = QGridLayout()
+        self.calibration_canvas.setLayout(calibration_canvas_layout)
         
-        calibration_feed_layout = QHBoxLayout(calibration_widget)
-        calibration_layout.addLayout(calibration_feed_layout)
-        
-        self.camera_widget = Camera_Widget()
-        self.camera_widget.setObjectName("spiral_test_drawing_widget")
-        self.camera_widget.setMinimumSize(calibration_widget.geometry().width(), calibration_widget.geometry().height())
-        calibration_feed_layout.addWidget(self.camera_widget)
+        self.camera_widget = Camera_Widget(calibration_widget)
+        # temporary:
+        self.camera_widget.setStyleSheet("background-color:white;")
+        self.camera_widget.setObjectName("camera_widget")
+        # self.camera_widget.setMinimumSize(calibration_widget.geometry().width(), calibration_widget.geometry().height())
+
+        self.calibration_aid_widget = Calibration_Widget(calibration_widget)
+        self.calibration_aid_widget.setObjectName("calibration_aid_widget")
+        # self.calibration_aid_widget.setMinimumSize(calibration_widget.geometry().width(), calibration_widget.geometry().height())
+
+        self.camera_widget.setMinimumSize(min(self.camera_widget.width(), self.calibration_aid_widget.width()),
+                                          min(self.camera_widget.height(), self.calibration_aid_widget.height()))
+        self.calibration_aid_widget.setMinimumSize(min(self.camera_widget.width(), self.calibration_aid_widget.width()),
+                                                   min(self.camera_widget.height(), self.calibration_aid_widget.height()))
+
+        calibration_canvas_layout.addWidget(self.camera_widget, 1, 1)
+        calibration_canvas_layout.addWidget(self.calibration_aid_widget, 1, 3)
 
     def setup_title_screen(self):
         title_widget = QWidget(self.title_screen)

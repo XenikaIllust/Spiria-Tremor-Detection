@@ -9,6 +9,14 @@
     color: white;
 }
 
+#calibration_canvas {
+    background-color: white;
+}
+
+#camera_widget {
+    background-color: white;
+}
+
 #spiral_test_title {
     font-family: "Montserrat SemiBold";
     font-style: Semi-Bold;

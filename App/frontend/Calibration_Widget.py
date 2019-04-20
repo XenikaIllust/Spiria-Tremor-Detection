@@ -3,10 +3,10 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 
 class Calibration_Widget(QWidget):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent=None):
+        super(QWidget, self).__init__(parent)
 
-        self.setGeometry(QRect(0, 0, 1024, 764))
+        self.setMinimumSize(1024, 764)
         self.setup_ui()
 
         self.points = []
