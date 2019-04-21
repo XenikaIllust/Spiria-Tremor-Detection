@@ -2,7 +2,8 @@ from functools import partial
 from PyQt5.QtCore import QThread, pyqtSignal, QObject
 
 """
-    Backend Engine for Spiria Raspberry Pi-based Application
+Backend Engine for Spiria Raspberry Pi-based Application.
+Contains all connections to link frontend to backend (GUI Elements to Backend Services)
 """
 
 TITLE_STATE = 0
@@ -126,7 +127,7 @@ class StateMachine():
         
         self.thread_sentinel = Thread_Sentinel()
         
-        self.set_button_actions()
+        self.set_actions()
         self.state = None
         self.set_state(TITLE_STATE)
 
@@ -144,7 +145,7 @@ class StateMachine():
     def get_state(self):
         return self.state
 
-    def set_button_actions(self):
+    def set_actions(self):
         self.ui.start_button.clicked.connect(partial(self.set_state, SPIRAL_PAIRING_STATE))
 
         # enable if UART not available
@@ -161,6 +162,12 @@ class StateMachine():
 
         self.ui.spiral_next_button.clicked.connect(partial(self.set_state, TREMOR_PAIRING_STATE))
         self.ui.spiral_save_exit_button.clicked.connect(partial(self.set_state, TITLE_STATE))
+        
+        self.ui.calibration_reset_button.clicked.connect(self.ui.calibration_aid_widget.reset_points)
+        self.ui.calibration_confirm_button.clicked.connect(partial(self.backend.homographer.set_source_points, self.ui.calibration_aid_widget.points))
+        self.ui.calibration_confirm_button.clicked.connect(partial(self.backend.homographer.set_destination_points, self.ui.spiral_painter.get_edge_points()))
+        self.ui.calibration_confirm_button.clicked.connect(self.backend.homographer.calculate_homography)
+        self.ui.calibration_confirm_button.clicked.connect(partial(self.set_state, SPIRAL_TEST_STATE))
 
         # enable if BT not available
         self.ui.tremor_pairing_start_button.clicked.connect(partial(self.set_state, TREMOR_TEST_START_STATE))

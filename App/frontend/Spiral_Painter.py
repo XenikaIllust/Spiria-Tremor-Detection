@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 
 class Spiral_Painter(QWidget):
     def __init__(self, parent=None):
-        super().__init__()
+        super(QWidget, self).__init__(parent)
 
         self.setAutoFillBackground(True)
         self.setup_ui()
@@ -13,6 +13,9 @@ class Spiral_Painter(QWidget):
         self.last_pos = None
         self.curr_pos = None
         self.points = []
+        
+        self.paint_device = None
+        self.transform_device = None
 
     def setup_ui(self):
         # palette = QPalette()
@@ -27,11 +30,17 @@ class Spiral_Painter(QWidget):
         self.canvas_pixmap = QPixmap(self.width(), self.height()).scaled(self.width(), self.height(), Qt.KeepAspectRatio)
         self.canvas_pixmap.fill(Qt.transparent)
         self.canvas.setPixmap(self.canvas_pixmap)
+        
+    def get_edge_points(self):
+        return [self.geometry().topLeft(), self.geometry().topRight(), self.geometry().bottomRight(), self.geometry().bottomLeft()]
 
     def set_paint_device(self, device):
-        self.device = device
-        self.device.point_ready.connect(self.add_point)
-        self.device.start_parallel_feed()
+        self.paint_device = device
+        self.paint_device.point_ready.connect(self.add_point)
+        self.paint_device.start_parallel_feed()
+        
+    def set_transform_device(self, device):
+        self.transform_device = device
 
     def paintEvent(self, event):
         self.canvas.pixmap().fill(Qt.transparent)
@@ -62,6 +71,9 @@ class Spiral_Painter(QWidget):
             return
         
         point = QPoint(point[0], point[1])
+        
+        if self.transform_device != None:
+            point = self.transform_device.transform_coordinates(point)
         
         if self.last_pos == None:
             self.last_pos = point

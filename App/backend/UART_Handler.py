@@ -89,6 +89,8 @@ class UART_Handler(QObject):
 
     def get_point(self):
         data = self.getData(9)
+        
+        print(data)
 
         if data != None:
             data = data.split(",")
@@ -96,20 +98,6 @@ class UART_Handler(QObject):
             data_y = int(data[1])
             
             return (data_x, data_y)
-
-    def calibration(self, dest_geometry):
-        self.calib_pts_src = np.array([])
-
-        # obtain calibration points
-        for i in range(0, 4):
-            np.append(self.calib_pts_src, self.get_point())
-
-        self.calib_pts_dest = np.array([[dest_geometry.left(), dest_geometry.top()],
-                                        [dest_geometry.right(), dest_geometry.top()],
-                                        [dest_geometry.right(), dest_geometry.bottom()],
-                                        [dest_geometry.left(), dest_geometry.bottom()]])
-
-        # self.transform = self.homographer.get_homography_matrix(self.calib_pts_src, self.calib_pts_dest)
     
     def start_threads(self):
         self.put_queue_thread.start()

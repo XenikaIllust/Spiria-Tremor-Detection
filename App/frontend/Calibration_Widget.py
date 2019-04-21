@@ -7,16 +7,13 @@ class Calibration_Widget(QWidget):
         super(QWidget, self).__init__(parent)
 
         self.setMinimumSize(1024, 764)
+        
         self.setup_ui()
 
         self.points = []
         self.count = 0
 
     def setup_ui(self):
-        self.pixmap = QPixmap()
-        self.image = QLabel(self)
-        self.image.setPixmap(self.pixmap)
-
         self.canvas = QLabel(self)
         self.canvas_pixmap = QPixmap(self.width(), self.height()).scaled(self.width(), self.height(), Qt.KeepAspectRatio)
         self.canvas_pixmap.fill(Qt.black)
@@ -28,21 +25,21 @@ class Calibration_Widget(QWidget):
         self.device.start_parallel_feed()
 
     def paintEvent(self, event):
-        cursor_painter = QPainter()
-        cursor_painter.begin(self.canvas.pixmap())
-        cursor_painter.pen().setWidth(100)
-        cursor_painter.setPen(Qt.red)
-        cursor_painter.setBrush(Qt.red)
+        painter = QPainter()
+        painter.begin(self.canvas.pixmap())
+        painter.pen().setWidth(100)
+        painter.setPen(Qt.red)
+        painter.setBrush(Qt.red)
 
         for i, point in enumerate(self.points):
-            cursor_painter.drawEllipse(point, 5, 5)
+            painter.drawEllipse(point, 5, 5)
 
             if i > 0:
-                cursor_painter.drawLine(self.points[i-1], self.points[i])
+                painter.drawLine(self.points[i-1], self.points[i])
             if i == 3:
-                cursor_painter.drawLine(self.points[0], self.points[i])
+                painter.drawLine(self.points[0], self.points[i])
 
-        cursor_painter.end()
+        painter.end()
 
     def add_point(self):
         point = self.device.curr_point
@@ -57,6 +54,16 @@ class Calibration_Widget(QWidget):
             self.points.append(self.curr_pos)
             self.count += 1
             self.update()
+            
+    def reset_points(self):
+        self.points = []
+        self.count = 0
+        painter = QPainter()
+        painter.begin(self.canvas.pixmap())
+        print("resetting " + str(self.geometry()))
+        painter.fillRect(0, 0, self.geometry().width(), self.geometry().height(), Qt.black)
+        painter.end()
+        self.update()
 
     def mousePressEvent(self, event):
         if self.count < 4:
@@ -69,5 +76,8 @@ if __name__ == "__main__":
     import sys
     app = QApplication(sys.argv)
     spiral_painter = Calibration_Widget()
+    reset_button = QPushButton(spiral_painter)
+    reset_button.setText("Reset Points")
+    reset_button.clicked.connect(spiral_painter.reset_points)
     spiral_painter.show()
     app.exec_()

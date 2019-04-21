@@ -1,7 +1,7 @@
 from backend.Request_Handler import *
 from backend.Bluetooth_Handler import *
 from backend.UART_Handler import *
-from backend.Homographer import *
+from backend.Homographer import Homographer
 from backend.Questionnaire_Score_Calculation import *
 from backend.Camera import Threaded_Camera
 
@@ -16,6 +16,7 @@ class BackendServices():
         # Comment out if not using BT
         # self.bluetooth_handler = BluetoothHandler()
 
+        self.homographer = Homographer()
         self.questionnaire_calculator = Questionnaire_Calculator()
 
     def update(self, state):

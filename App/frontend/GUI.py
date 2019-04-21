@@ -141,19 +141,32 @@ class Ui_MainWindow(object):
         
         calibration_canvas_layout = QGridLayout()
         calibration_canvas_layout.setColumnMinimumWidth(0, 10)
-        calibration_canvas_layout.setColumnMinimumWidth(2, 100)
+        calibration_canvas_layout.setColumnMinimumWidth(2, 10)
         self.calibration_canvas.setLayout(calibration_canvas_layout)
         
         self.camera_widget = Camera_Widget(calibration_widget)
-        # temporary:
-        self.camera_widget.setStyleSheet("background-color:white;")
         self.camera_widget.setObjectName("camera_widget")
-        # self.camera_widget.setMinimumSize(calibration_widget.geometry().width(), calibration_widget.geometry().height())
 
         self.calibration_aid_widget = Calibration_Widget(calibration_widget)
         self.calibration_aid_widget.setObjectName("calibration_aid_widget")
-        # self.calibration_aid_widget.setMinimumSize(calibration_widget.geometry().width(), calibration_widget.geometry().height())
 
+        self.calibration_reset_button = QPushButton(calibration_widget)
+        self.calibration_reset_button.setObjectName("calibration_reset_button")
+        self.calibration_reset_button.setText("Reset Calibration")
+        calibration_canvas_layout.addWidget(self.calibration_reset_button, 2, 1, 1, 3)
+
+        self.calibration_confirm_button = QPushButton(calibration_widget)
+        self.calibration_confirm_button.setObjectName("calibration_confirm_button")
+        self.calibration_confirm_button.setText("Confirm Calibration")
+        calibration_canvas_layout.addWidget(self.calibration_confirm_button, 3, 1, 1, 3)
+        
+        '''
+        self.camera_widget.setMinimumSize(min(self.camera_widget.geometry().width(), self.calibration_aid_widget.geometry().width()),
+                                        min(self.camera_widget.geometry().height(), self.calibration_aid_widget.geometry().height()))
+        self.calibration_aid_widget.setMinimumSize(min(self.camera_widget.geometry().width(), self.calibration_aid_widget.geometry().width()),
+                                           min(self.camera_widget.geometry().height(), self.calibration_aid_widget.geometry().height()))
+        '''
+        
         # calibration_layout.addWidget(self.camera_widget)
         calibration_canvas_layout.addWidget(self.camera_widget, 1, 1)
         calibration_canvas_layout.addWidget(self.calibration_aid_widget, 1, 3)
@@ -232,9 +245,8 @@ class Ui_MainWindow(object):
         spiral_test_text.setReadOnly(True)
         spiral_test_layout.addWidget(spiral_test_text)
 
-        self.spiral_painter = Spiral_Painter()
+        self.spiral_painter = Spiral_Painter(spiral_test_layout_widget)
         self.spiral_painter.setObjectName("spiral_painter")
-        self.spiral_painter.setGeometry(spiral_test_layout_widget.geometry())
         spiral_test_layout.addWidget(self.spiral_painter)
 
     def setup_tremor_pairing_screen(self):
