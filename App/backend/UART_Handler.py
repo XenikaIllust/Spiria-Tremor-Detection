@@ -89,17 +89,14 @@ class UART_Handler(QObject):
 
     def get_point(self):
         data = self.getData(9)
-        
-        print(data)
 
-        if data != None:
-            data = data.split(",")
-            data_x = int(data[0])
-            data_y = int(data[1])
+        data = data.split(",")
+        data_x = int(data[0])
+        data_y = int(data[1])
             
-            return (data_x, data_y)
+        return (data_x, data_y)
     
-    def start_threads(self):
+    def run_threads(self):
         self.put_queue_thread.start()
         self.get_queue_thread.start()
         

@@ -37,7 +37,6 @@ class Spiral_Painter(QWidget):
     def set_paint_device(self, device):
         self.paint_device = device
         self.paint_device.point_ready.connect(self.add_point)
-        self.paint_device.start_parallel_feed()
         
     def set_transform_device(self, device):
         self.transform_device = device
@@ -65,12 +64,17 @@ class Spiral_Painter(QWidget):
             painter.end()
         
     def add_point(self):
-        point = self.device.curr_point
+        point = self.paint_device.curr_point
         
         if point == None:
             return
         
-        point = QPoint(point[0], point[1])
+        if point[1] == 1023:
+            point = QPoint(point[0], 0)
+        else:
+            point = QPoint(point[0], 1023 - point[1] - 255)
+            
+        print(point)
         
         if self.transform_device != None:
             point = self.transform_device.transform_coordinates(point)

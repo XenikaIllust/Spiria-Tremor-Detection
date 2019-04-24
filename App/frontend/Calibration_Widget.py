@@ -1,12 +1,15 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
+from backend.UART_Handler import *
+from backend.Homographer import Homographer
+import math
 
 class Calibration_Widget(QWidget):
     def __init__(self, parent=None):
         super(QWidget, self).__init__(parent)
 
-        self.setMinimumSize(1024, 764)
+        self.setMinimumSize(1024, 768)
         
         self.setup_ui()
 
@@ -22,7 +25,6 @@ class Calibration_Widget(QWidget):
     def set_paint_device(self, device):
         self.device = device
         self.device.point_ready.connect(self.add_point)
-        self.device.start_parallel_feed()
 
     def paintEvent(self, event):
         painter = QPainter()
@@ -42,18 +44,39 @@ class Calibration_Widget(QWidget):
         painter.end()
 
     def add_point(self):
+        def distance(point1, point2):
+            return math.sqrt((point1.x() - point2.x()) ** 2 + (point1.y() - point2.y()) ** 2)
+    
         point = self.device.curr_point
+        
+        if point[1] == 1023:
+            point = QPoint(point[0], 0)
+        else:
+            point = QPoint(point[0], 1023 - point[1] - 255)
+        
+        print(point)
+        print(len(self.points))
 
         if point == None:
             return
+        
+        if point.x() == 1023 and point.y() == 0:
+            return
+        
+        if len(self.points) > 0 and distance(point, self.points[len(self.points) - 1]) < 100:
+            return
 
         if self.count < 4:
-            point = QPoint(point[0], point[1])
-
             self.curr_pos = point
             self.points.append(self.curr_pos)
             self.count += 1
             self.update()
+            
+    def points_to_array(self):
+        return [[self.points[0][0], self.points[0][1]],
+                [self.points[1][0], self.points[1][1]],
+                [self.points[2][0], self.points[2][1]],
+                [self.points[3][0], self.points[3][1]]]
             
     def reset_points(self):
         self.points = []
@@ -65,16 +88,19 @@ class Calibration_Widget(QWidget):
         painter.end()
         self.update()
 
+    '''
     def mousePressEvent(self, event):
         if self.count < 4:
             self.curr_pos = event.pos()
             self.points.append(self.curr_pos)
             self.count += 1
             self.update()
+    '''
 
 if __name__ == "__main__":
     import sys
     app = QApplication(sys.argv)
+    
     spiral_painter = Calibration_Widget()
     reset_button = QPushButton(spiral_painter)
     reset_button.setText("Reset Points")

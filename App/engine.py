@@ -29,17 +29,33 @@ class Thread_Sentinel(QObject):
         self.qthreads = None
     
     def connect(self, run_function, kill_function):
+        print(isinstance(run_function, list))
+        
         try:
-            self.run_threads.connect(run_function)
-            self.kill_threads.connect(kill_function)
-        except:
+            if isinstance(run_function, list):
+                for function in run_function:
+                    self.run_threads.connect(function)
+                    print(str(function) + "connected")
+                
+                for function in kill_function:
+                    self.kill_threads.connect(function)
+                    print(str(function) + "connected")
+                    
+            else:
+                self.run_threads.connect(run_function)
+                print(str(run_function) + "connected")
+                self.kill_threads.connect(kill_function)
+                print(str(kill_function) + "connected")
+        except Exception as e:
+            print(e)
             pass
         
     def disconnect(self):
         try:
             self.run_threads.disconnect()
             self.kill_threads.disconnect()
-        except:
+        except Exception as e:
+            print(e)
             pass        
         
     def run_all_threads(self):
@@ -101,13 +117,15 @@ class StateMachine():
         self.spiral_pairing_state = State(SPIRAL_PAIRING_STATE, None, None)
 
         # uncomment if need to use picam
-        self.calibration_state = State(SPIRAL_CALIBRATION_STATE, self.backend.camera.run_threads, self.backend.camera.kill_threads)
+        self.calibration_state = State(SPIRAL_CALIBRATION_STATE,
+                                       [self.backend.camera.run_threads, self.backend.uart_handler.run_threads],
+                                       [self.backend.camera.kill_threads, self.backend.uart_handler.kill_threads])
         # self.calibration_state = State(SPIRAL_CALIBRATION_STATE, None, None)
         
         # Comment out if UART not enabled
-        # self.spiral_test_state = State(SPIRAL_TEST_STATE, self.backend.uart_handler.qthreads)
+        self.spiral_test_state = State(SPIRAL_TEST_STATE, self.backend.uart_handler.run_threads, self.backend.uart_handler.kill_threads)
         # Comment out if UART enabled
-        self.spiral_test_state = State(SPIRAL_TEST_STATE, None, None)
+        # self.spiral_test_state = State(SPIRAL_TEST_STATE, None, None)
         
         self.spiral_finished_state = State(SPIRAL_FINISHED_STATE, None, None)
         self.tremor_pairing_state = State(TREMOR_PAIRING_STATE, None, None)
@@ -155,7 +173,7 @@ class StateMachine():
         # self.ui.spiral_pairing_start_button.clicked.connect(self.spiral_pairing)
         # self.ui.spiral_pairing_failed_button.clicked.connect(partial(self.set_state, SPIRAL_PAIRING_STATE))
         # self.ui.spiral_pairing_continue_button.clicked.connect(partial(self.set_state, SPIRAL_CALIBRATION_STATE))
-        # self.ui.spiral_painter.set_paint_device(self.backend.uart_handler)
+        self.ui.calibration_aid_widget.set_paint_device(self.backend.uart_handler)
 
         # enable if camera available
         self.ui.camera_widget.set_camera(self.backend.camera)
@@ -168,6 +186,8 @@ class StateMachine():
         self.ui.calibration_confirm_button.clicked.connect(partial(self.backend.homographer.set_destination_points, self.ui.spiral_painter.get_edge_points()))
         self.ui.calibration_confirm_button.clicked.connect(self.backend.homographer.calculate_homography)
         self.ui.calibration_confirm_button.clicked.connect(partial(self.set_state, SPIRAL_TEST_STATE))
+        
+        self.ui.spiral_painter.set_paint_device(self.backend.uart_handler)
 
         # enable if BT not available
         self.ui.tremor_pairing_start_button.clicked.connect(partial(self.set_state, TREMOR_TEST_START_STATE))

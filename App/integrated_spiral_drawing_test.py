@@ -23,7 +23,8 @@ class Integrated_Spiral_Painter(Spiral_Painter):
         self.uart_handler.point_ready.connect(self.add_point)
         self.uart_handler.start_threads()
         self.transform_device = Homographer()
-        self.transform_device.set_source_points([[88, 210], [465, 72], [886, 383], [460, 604]])
+        self.transform_device.set_source_points([[0, 255], [1023, 255], [1023, 1023], [0, 1023]])
+        # self.transform_device.set_destination_points([[0, 0], [693, 0], [693, 660], [0, 660]])
         self.transform_device.set_destination_points([[self.geometry().left(), self.geometry().top()],
                                                [self.geometry().right(), self.geometry().top()],
                                                [self.geometry().right(), self.geometry().bottom()],
@@ -38,7 +39,8 @@ class Integrated_Spiral_Painter(Spiral_Painter):
         
         point = QPoint(point[0], 1023 - point[1])
         print("unedited point: " + str(point))
-        point = QPoint(self.transform_device.transform_coordinates([point.x(), point.y()]))
+        transformed_point = self.transform_device.transform_coordinates([[point.x(), point.y(), 1]])
+        point = QPoint(transformed_point[0][0], transformed_point[0][1])
         print("edited point: " + str(point))
         
         if self.last_pos == None:
@@ -51,7 +53,8 @@ class Integrated_Spiral_Painter(Spiral_Painter):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     integrated_spiral_painter = Integrated_Spiral_Painter()
-    integrated_spiral_painter.setGeometry(0,0,693,660)
+    # integrated_spiral_painter.setGeometry(0,0,693,660)
+    # integrated_spiral_painter.setGeometry(0, 0, 1024, 768)
     integrated_spiral_painter.show()
     app.exec_()
     # status = uart_handler.pairing()
