@@ -23,14 +23,16 @@ class Homographer():
         return points
 
     def set_source_points(self, pts_src):
-        pts_src = self.qpoints_to_array(pts_src)
+        if type(pts_src[0]) != np.ndarray:
+            pts_src = self.qpoints_to_array(pts_src)
         self.src0 = pts_src[0]
         self.src1 = pts_src[1]
         self.src2 = pts_src[2]
         self.src3 = pts_src[3]
 
     def set_destination_points(self, pts_dst):
-        pts_dst = self.qpoints_to_array(pts_dst)
+        if type(pts_dst[0]) != np.ndarray:
+            pts_dst = self.qpoints_to_array(pts_dst)
         self.dest0 = pts_dst[0]
         self.dest1 = pts_dst[1]
         self.dest2 = pts_dst[2]
@@ -42,12 +44,13 @@ class Homographer():
 
     def transform_coordinates(self, pt_src):
         if self.H is not None:
-            pt_dest = np.matmul(pt_src, self.H)
-            # cv2.warpPerspective()
+            result = np.matmul(pt_src, self.H)
+            print("result: " + str(result))
+            pt_dest = [result[0][0]/abs(result[0][2]), result[0][1]/abs(result[0][2])]
             
             return pt_dest
         else:
-            return pt_src
+            return [pt_src[0][0], pt_src[0][1]]
         
     def reset_homography(self):
         self.src0 = None
@@ -65,11 +68,11 @@ class Homographer():
 if __name__ == "__main__":
     import cv2
 
-    # pts_src = np.array([[88, 210], [465, 72], [886, 383], [460, 604]], np.float32)
-    # pts_dst = np.array([[0, 0], [300, 0], [300, 300], [0, 300]], np.float32)
+    pts_src = np.array([[88, 210], [465, 72], [886, 383], [460, 604]], np.float32)
+    pts_dst = np.array([[0, 0], [300, 0], [300, 400], [0, 400]], np.float32)
     
-    pts_src = np.array([[0, 255], [1023, 255], [1023, 1023], [0, 1023]], np.float32)
-    pts_dst = np.array([[0, 0], [300, 0], [300, 300], [0, 300]], np.float32)
+    # pts_src = np.array([[0, 255], [1023, 255], [1023, 1023], [0, 1023]], np.float32)
+    # pts_dst = np.array([[0, 0], [300, 0], [300, 300], [0, 300]], np.float32)
 
     # h = cv2.getPerspectiveTransform(pts_src, pts_dst)
     # print(h)

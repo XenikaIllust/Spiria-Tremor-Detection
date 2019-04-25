@@ -22,7 +22,7 @@ class UART_Handler(QObject):
         def run(self):
             while self.parent.stop != True:
                 self.parent.queue.put(self.parent.get_point())
-            self.parent.stop = True
+            self.parent.stop = False
             
     class GetQueueThread(QThread):
         def __init__(self, parent):
@@ -33,7 +33,7 @@ class UART_Handler(QObject):
             while self.parent.stop != True:
                 self.parent.curr_point = self.parent.queue.get()
                 self.parent.point_ready.emit()
-            self.parent.stop = True
+            self.parent.stop = False
     
     def __init__(self, portname, baudrate):
         super().__init__()
@@ -97,8 +97,10 @@ class UART_Handler(QObject):
         return (data_x, data_y)
     
     def run_threads(self):
+        print("threads running")
         self.put_queue_thread.start()
         self.get_queue_thread.start()
         
     def kill_threads(self):
+        print("threads killed")
         self.stop = True

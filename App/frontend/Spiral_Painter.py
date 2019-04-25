@@ -58,11 +58,11 @@ class Spiral_Painter(QWidget):
             painter = QPainter()
             painter.begin(self.canvas.pixmap())
             painter.pen().setWidth(10)
-            painter.setPen(Qt.red)
+            painter.setPen(Qt.blue)
             for ind in range(0, len(self.points)-1):
                 painter.drawLine(self.points[ind], self.points[ind+1])
             painter.end()
-        
+    
     def add_point(self):
         point = self.paint_device.curr_point
         
@@ -73,17 +73,19 @@ class Spiral_Painter(QWidget):
             point = QPoint(point[0], 0)
         else:
             point = QPoint(point[0], 1023 - point[1] - 255)
-            
-        print(point)
         
         if self.transform_device != None:
-            point = self.transform_device.transform_coordinates(point)
+            transformed_point = self.transform_device.transform_coordinates([[point.x(), point.y(), 1]])
+            
+            print("transformed point: " + str(transformed_point))
+            
+            point = QPoint(transformed_point[0], transformed_point[1])
         
         if self.last_pos == None:
             self.last_pos = point
             
         self.curr_pos = point
-        self.points.append(self.curr_pos)
+        # self.points.append(self.curr_pos)
         self.update()
 
 if __name__ == '__main__':

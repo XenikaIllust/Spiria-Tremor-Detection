@@ -21,14 +21,14 @@ class Integrated_Spiral_Painter(Spiral_Painter):
         # status = uart_handler.pairing()
         
         self.uart_handler.point_ready.connect(self.add_point)
-        self.uart_handler.start_threads()
+        self.uart_handler.run_threads()
         self.transform_device = Homographer()
-        self.transform_device.set_source_points([[0, 255], [1023, 255], [1023, 1023], [0, 1023]])
+        self.transform_device.set_source_points([QPoint(0, 255), QPoint(1023, 255), QPoint(1023, 1023), QPoint(0, 1023)])
         # self.transform_device.set_destination_points([[0, 0], [693, 0], [693, 660], [0, 660]])
-        self.transform_device.set_destination_points([[self.geometry().left(), self.geometry().top()],
-                                               [self.geometry().right(), self.geometry().top()],
-                                               [self.geometry().right(), self.geometry().bottom()],
-                                               [self.geometry().left(), self.geometry().bottom()]])
+        self.transform_device.set_destination_points([self.geometry().topLeft(),
+                                                      self.geometry().topRight(),
+                                                      self.geometry().bottomRight(),
+                                                      self.geometry().bottomLeft()])
         self.transform_device.calculate_homography()
         
     def add_point(self):

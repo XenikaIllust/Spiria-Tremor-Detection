@@ -88,6 +88,10 @@ class Ui_MainWindow(object):
         self.questionnaire_screen.setGeometry(self.frame.geometry())
         self.setup_questionnaire_screen()
 
+        self.result_screen = QWidget()
+        self.result_screen.setGeometry(self.frame.geometry())
+        self.setup_result_screen()
+
         self.complete_screen = QWidget()
         self.complete_screen.setGeometry(self.frame.geometry())
         self.setup_complete_screen()
@@ -102,6 +106,7 @@ class Ui_MainWindow(object):
         self.stacked_widget.addWidget(self.tremor_test_screen)
         self.stacked_widget.addWidget(self.tremor_complete_test_screen)
         self.stacked_widget.addWidget(self.questionnaire_screen)
+        self.stacked_widget.addWidget(self.result_screen)
         self.stacked_widget.addWidget(self.complete_screen)
 
         self.debug_next_button = QPushButton(self.frame)
@@ -600,6 +605,39 @@ class Ui_MainWindow(object):
                                               question3_buttongroup, question4_buttongroup,
                                               question5_buttongroup, question6_buttongroup]
 
+    def setup_result_screen(self):
+        result_layout_widget = QWidget(self.result_screen)
+        result_layout_widget.setGeometry(self.frame.geometry())
+
+        result_layout = QVBoxLayout(result_layout_widget)
+
+        result_title_text = QLineEdit(result_layout_widget)
+        result_title_text.setObjectName("result_title_text")
+        result_title_text.setText("Results")
+        result_title_text.setReadOnly(True)
+        result_layout.addWidget(result_title_text)
+        
+        result_spiral_image_text = QLineEdit(result_layout_widget)
+        result_spiral_image_text.setObjectName("result_spiral_image_text")
+        result_spiral_image_text.setText("Spiral Image: ")
+        result_layout.addWidget(result_spiral_image_text)
+        
+        # result_spiral_image = QLabel(result_layout_widget)
+        
+        result_tremor_text = QLineEdit(result_layout_widget)
+        result_tremor_text.setObjectName("result_tremor_text")
+        result_tremor_text.setText("Tremor frequency: ")
+        result_layout.addWidget(result_tremor_text)
+        
+        self.result_tremor_frequency_text = QLineEdit(result_layout_widget)
+        self.result_tremor_frequency_text.setObjectName("result_tremor_frequency_text")
+        result_layout.addWidget(self.result_tremor_frequency_text)
+
+        self.result_next_button = QPushButton(result_layout_widget)
+        self.result_next_button.setObjectName("result_next_button")
+        self.result_next_button.setText("Finish")
+        result_layout.addWidget(self.result_next_button)
+    
     def setup_complete_screen(self):
         complete_layout_widget = QWidget(self.complete_screen)
         complete_layout_widget.setGeometry(self.frame.geometry())
@@ -608,7 +646,7 @@ class Ui_MainWindow(object):
 
         complete_text = QLineEdit(complete_layout_widget)
         complete_text.setObjectName("complete_text")
-        complete_text.setText("Test finished. Thank you for using Spiria")
+        complete_text.setText("Thank you for using Spiria!")
         complete_text.setReadOnly(True)
 
         self.complete_button = QPushButton(complete_layout_widget)

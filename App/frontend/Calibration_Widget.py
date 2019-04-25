@@ -53,9 +53,6 @@ class Calibration_Widget(QWidget):
             point = QPoint(point[0], 0)
         else:
             point = QPoint(point[0], 1023 - point[1] - 255)
-        
-        print(point)
-        print(len(self.points))
 
         if point == None:
             return
@@ -65,6 +62,9 @@ class Calibration_Widget(QWidget):
         
         if len(self.points) > 0 and distance(point, self.points[len(self.points) - 1]) < 100:
             return
+        
+        print(self.points)
+        print(len(self.points))
 
         if self.count < 4:
             self.curr_pos = point
@@ -88,14 +88,12 @@ class Calibration_Widget(QWidget):
         painter.end()
         self.update()
 
-    '''
     def mousePressEvent(self, event):
         if self.count < 4:
             self.curr_pos = event.pos()
             self.points.append(self.curr_pos)
             self.count += 1
             self.update()
-    '''
 
 if __name__ == "__main__":
     import sys

@@ -16,9 +16,10 @@ TREMOR_TEST_START_STATE = 6
 TREMOR_TEST_STATE = 7
 TREMOR_FINISHED_STATE = 8
 QUESTIONNAIRE_STATE = 9
-COMPLETE_STATE = 10
+RESULT_STATE = 10
+COMPLETE_STATE = 11
 
-STATE_COUNT = 11
+STATE_COUNT = 12
 
 class Thread_Sentinel(QObject):
     run_threads = pyqtSignal()
@@ -31,24 +32,32 @@ class Thread_Sentinel(QObject):
     def connect(self, run_function, kill_function):
         print(isinstance(run_function, list))
         
-        try:
-            if isinstance(run_function, list):
-                for function in run_function:
+        if isinstance(run_function, list):
+            for function in run_function:
+                try:
                     self.run_threads.connect(function)
                     print(str(function) + "connected")
-                
-                for function in kill_function:
+                except Exception as e:
+                    print(e)
+                    pass
+            
+            for function in kill_function:
+                try:
                     self.kill_threads.connect(function)
                     print(str(function) + "connected")
-                    
-            else:
+                except Exception as e:
+                    print(e)
+                    pass
+                
+        else:
+            try:
                 self.run_threads.connect(run_function)
                 print(str(run_function) + "connected")
                 self.kill_threads.connect(kill_function)
                 print(str(kill_function) + "connected")
-        except Exception as e:
-            print(e)
-            pass
+            except Exception as e:
+                print(e)
+                pass
         
     def disconnect(self):
         try:
@@ -119,11 +128,11 @@ class StateMachine():
         # uncomment if need to use picam
         self.calibration_state = State(SPIRAL_CALIBRATION_STATE,
                                        [self.backend.camera.run_threads, self.backend.uart_handler.run_threads],
-                                       [self.backend.camera.kill_threads, self.backend.uart_handler.kill_threads])
+                                       [self.backend.camera.kill_threads, None])
         # self.calibration_state = State(SPIRAL_CALIBRATION_STATE, None, None)
         
         # Comment out if UART not enabled
-        self.spiral_test_state = State(SPIRAL_TEST_STATE, self.backend.uart_handler.run_threads, self.backend.uart_handler.kill_threads)
+        self.spiral_test_state = State(SPIRAL_TEST_STATE, None, self.backend.uart_handler.kill_threads)
         # Comment out if UART enabled
         # self.spiral_test_state = State(SPIRAL_TEST_STATE, None, None)
         
@@ -133,12 +142,13 @@ class StateMachine():
         self.tremor_test_state = State(TREMOR_TEST_STATE, None, None)
         self.tremor_finished_state = State(TREMOR_FINISHED_STATE, None, None)
         self.questionnaire_state = State(QUESTIONNAIRE_STATE, None, None)
+        self.result_state = State(RESULT_STATE, None, None)
         self.complete_state = State(COMPLETE_STATE, None, None)
         
         self.states = [self.title_state, self.spiral_pairing_state, self.calibration_state,
                        self.spiral_test_state, self.spiral_finished_state, self.tremor_pairing_state,
                        self.tremor_test_start_state, self.tremor_test_state, self.tremor_finished_state,
-                       self.questionnaire_state, self.complete_state]
+                       self.questionnaire_state, self.result_state, self.complete_state]
         
         self.tremor_timer = Tremor_Display_Timer(self.ui.tremor_time_text)
         self.threaded_tremor_test = Threaded_Tremor_Test(self.backend)
@@ -186,28 +196,36 @@ class StateMachine():
         self.ui.calibration_confirm_button.clicked.connect(partial(self.backend.homographer.set_destination_points, self.ui.spiral_painter.get_edge_points()))
         self.ui.calibration_confirm_button.clicked.connect(self.backend.homographer.calculate_homography)
         self.ui.calibration_confirm_button.clicked.connect(partial(self.set_state, SPIRAL_TEST_STATE))
+        self.ui.calibration_confirm_button.clicked.connect(print, self.backend.uart_handler.stop)
         
         self.ui.spiral_painter.set_paint_device(self.backend.uart_handler)
+        self.ui.spiral_painter.set_transform_device(self.backend.homographer)
 
         # enable if BT not available
-        self.ui.tremor_pairing_start_button.clicked.connect(partial(self.set_state, TREMOR_TEST_START_STATE))
+        # self.ui.tremor_pairing_start_button.clicked.connect(partial(self.set_state, TREMOR_TEST_START_STATE))
 
         # enable if BT available
-        # self.ui.tremor_pairing_start_button.clicked.connect(self.tremor_pairing)
-        # self.ui.tremor_pairing_failed_button.clicked.connect(partial(self.set_state, TREMOR_PAIRING_STATE))
-        # self.ui.tremor_pairing_continue_button.clicked.connect(partial(self.set_state, TREMOR_TEST_START_STATE))
+        self.ui.tremor_pairing_start_button.clicked.connect(self.tremor_pairing)
+        self.ui.tremor_pairing_failed_button.clicked.connect(partial(self.set_state, TREMOR_PAIRING_STATE))
+        self.ui.tremor_pairing_continue_button.clicked.connect(partial(self.set_state, TREMOR_TEST_START_STATE))
 
         self.ui.tremor_test_start_button.clicked.connect(partial(self.tremor_timer.timer_start))
         # enable if bluetooth available
-        # self.ui.tremor_test_start_button.clicked.connect(self.threaded_tremor_test.start)
+        self.ui.tremor_test_start_button.clicked.connect(self.threaded_tremor_test.start)
         self.ui.tremor_test_start_button.clicked.connect(partial(self.set_state, TREMOR_TEST_STATE))
+        self.backend.bluetooth_handler.finished.connect(partial(self.backend.results_handler.set_tremor_data, self.backend.bluetooth_handler.tremor_frequency))
+        self.backend.bluetooth_handler.finished.connect(partial(self.set_state, TREMOR_FINISHED_STATE))
 
         self.ui.tremor_next_button.clicked.connect(partial(self.set_state, QUESTIONNAIRE_STATE))
         self.ui.tremor_save_exit_button.clicked.connect(partial(self.set_state, TITLE_STATE))
 
-        self.ui.questionnaire_complete_button.clicked.connect(partial(self.set_state, COMPLETE_STATE))
-        self.ui.questionnaire_complete_button.clicked.connect(partial(self.backend.questionnaire_calculator.calculate_score,
-                                                                      self.ui.questionnaire_grouped_buttons))
+        self.ui.questionnaire_complete_button.clicked.connect(partial(self.set_state, RESULT_STATE))
+        self.ui.questionnaire_complete_button.clicked.connect(partial(self.backend.questionnaire_calculator.set_responses, self.ui.questionnaire_grouped_buttons))
+        self.ui.questionnaire_complete_button.clicked.connect(partial(self.backend.questionnaire_calculator.calculate_score, self.ui.questionnaire_grouped_buttons))
+        self.ui.questionnaire_complete_button.clicked.connect(partial(self.backend.results_handler.set_questionnaire_data, self.backend.questionnaire_calculator.get_responses, self.backend.questionnaire_calculator.get_score))
+        self.ui.questionnaire_complete_button.clicked.connect(partial(self.ui.result_tremor_frequency_text.setText, str(self.backend.results_handler.tremor_frequency)))        
+
+        self.ui.result_next_button.clicked.connect(partial(self.set_state, COMPLETE_STATE))
 
         self.ui.complete_button.clicked.connect(partial(self.set_state, TITLE_STATE))
 

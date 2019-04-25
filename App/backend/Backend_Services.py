@@ -4,6 +4,7 @@ from backend.UART_Handler import *
 from backend.Homographer import Homographer
 from backend.Questionnaire_Score_Calculation import *
 from backend.Camera import Threaded_Camera
+from backend.Results_Handler import Results_Handler
 
 class BackendServices():
     def __init__(self):
@@ -14,10 +15,12 @@ class BackendServices():
         self.request_handler = Request_Handler()
 
         # Comment out if not using BT
-        # self.bluetooth_handler = BluetoothHandler()
+        self.bluetooth_handler = BluetoothHandler()
 
         self.homographer = Homographer()
         self.questionnaire_calculator = Questionnaire_Calculator()
+        
+        self.results_handler = Results_Handler()
 
     def update(self, state):
         pass

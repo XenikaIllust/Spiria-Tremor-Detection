@@ -2,18 +2,25 @@ import bluetooth
 import time
 import re
 import codecs
+from PyQt5.QtCore import *
 
 BT1 = "98:D3:41:FD:42:B8"
 BT2 = "98:D3:31:FD:8B:99"
 BT4 = "98:D3:51:FD:86:88"
 
-class BluetoothHandler:
+class BluetoothHandler(QObject):
+    finished = pyqtSignal()
+    
     def __init__(self):
+        super().__init__()
+        
         self.addr = BT1
         self.socket = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
         self.port = 1
         self.socket.connect((self.addr, self.port))
         self.socket.settimeout(5)
+        
+        self.tremor_frequency = None
 
     def getData(self, num_bytes):
             r_data = self.socket.recv(num_bytes)
@@ -57,7 +64,7 @@ class BluetoothHandler:
         return False
 
 
-    def tremor_test(self):
+    def tremor_test(self):        
         started = False
         result_ready = False
         timeout = False
@@ -76,21 +83,27 @@ class BluetoothHandler:
             data = data.decode('utf-8')
             data_str += data
             
-            matches = re.findall(r"FE\d{1,3}\.?\d{0,2}EI", data_str)
+            searches = re.search(r"FE(\d{1,3}\.?\d{0,2})EI", data_str)
             
-            if len(matches) > 0:
+            if searches != None and len(searches.groups()) > 0:
                 result_ready = True
                 
         self.sendData("finished")
         
-        print(matches[0])
+        print(searches.group(1))
         
-        return matches[0]
+        self.tremor_frequency = float(searches.group(1))
+        print(self.tremor_frequency)
         
+        self.finished.emit()
+        
+    def get_frequency(self):
+        print(self.tremor_frequency)
+        return self.tremor_frequency
 
 if __name__ == "__main__":
     bt_handler = BluetoothHandler()
-    # status = bt_handler.pairing()
-    # print(status)
+    status = bt_handler.pairing()
+    print(status)
     data = bt_handler.tremor_test()
     print(data)
