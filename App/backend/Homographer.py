@@ -45,8 +45,8 @@ class Homographer():
     def transform_coordinates(self, pt_src):
         if self.H is not None:
             result = np.matmul(pt_src, self.H)
-            print("result: " + str(result))
-            pt_dest = [result[0][0]/abs(result[0][2]), result[0][1]/abs(result[0][2])]
+            # pt_dest = [result[0][0]/abs(result[0][2]), result[0][1]/abs(result[0][2])]
+            pt_dest = [abs(result[0][0]), abs(result[0][1])]
             
             return pt_dest
         else:

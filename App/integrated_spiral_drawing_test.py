@@ -31,6 +31,36 @@ class Integrated_Spiral_Painter(Spiral_Painter):
                                                       self.geometry().bottomLeft()])
         self.transform_device.calculate_homography()
         
+        self.points = []
+        
+        self.clicked = False
+        
+    def paintEvent(self, event):
+        self.canvas.pixmap().fill(Qt.transparent)
+        if self.curr_pos != None:
+            cursor_painter = QPainter()
+            cursor_painter.begin(self.canvas.pixmap())
+            cursor_painter.pen().setWidth(100)
+            cursor_painter.setPen(Qt.blue)
+            cursor_painter.setBrush(Qt.blue)
+            # cursor_painter.drawEllipse(self.curr_pos, 5, 5)
+            for point in self.points:
+                cursor_painter.drawEllipse(point, 5, 5)
+            cursor_painter.drawText(QPoint(self.geometry().left() + 10, self.geometry().top() + 10), "pos: " + str(self.curr_pos))
+            cursor_painter.end()
+    
+        '''
+        if self.last_pos != None:
+            self.points.append(self.last_pos)
+            painter = QPainter()
+            painter.begin(self.canvas.pixmap())
+            painter.pen().setWidth(10)
+            painter.setPen(Qt.blue)
+            for ind in range(0, len(self.points)-1):
+                painter.drawLine(self.points[ind], self.points[ind+1])
+            painter.end()
+        '''
+    
     def add_point(self):
         point = self.uart_handler.curr_point
         
@@ -40,15 +70,16 @@ class Integrated_Spiral_Painter(Spiral_Painter):
         point = QPoint(point[0], 1023 - point[1])
         print("unedited point: " + str(point))
         transformed_point = self.transform_device.transform_coordinates([[point.x(), point.y(), 1]])
-        point = QPoint(transformed_point[0][0], transformed_point[0][1])
+        print(transformed_point)
+        point = QPoint(transformed_point[0], transformed_point[1])
         print("edited point: " + str(point))
         
         if self.last_pos == None:
             self.last_pos = point
             
         self.curr_pos = point
+        self.points.append(self.curr_pos)
         self.update()
-            
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

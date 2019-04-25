@@ -30,15 +30,12 @@ class Thread_Sentinel(QObject):
         self.qthreads = None
     
     def connect(self, run_function, kill_function):
-        print(isinstance(run_function, list))
-        
         if isinstance(run_function, list):
             for function in run_function:
                 try:
                     self.run_threads.connect(function)
                     print(str(function) + "connected")
                 except Exception as e:
-                    print(e)
                     pass
             
             for function in kill_function:
@@ -46,7 +43,6 @@ class Thread_Sentinel(QObject):
                     self.kill_threads.connect(function)
                     print(str(function) + "connected")
                 except Exception as e:
-                    print(e)
                     pass
                 
         else:
@@ -102,14 +98,6 @@ class Tremor_Display_Timer():
 
     def reset(self):
         self.curr_time = self.num_seconds
-
-class Threaded_Tremor_Test(QThread):
-    def __init__(self, backend):
-        super().__init__()
-        self.backend = backend
-    
-    def run(self):
-        self.backend.bluetooth_handler.tremor_test()
         
 class State():
     def __init__(self, ID, run_function, kill_function):
@@ -117,8 +105,11 @@ class State():
         self.run_function = run_function
         self.kill_function = kill_function
 
-class StateMachine():
+class StateMachine(QObject):
+    tremor_frequency_ready = pyqtSignal()
+    
     def __init__(self, ui, backend):
+        super().__init__()
         self.ui = ui
         self.backend = backend
 
@@ -151,7 +142,6 @@ class StateMachine():
                        self.questionnaire_state, self.result_state, self.complete_state]
         
         self.tremor_timer = Tremor_Display_Timer(self.ui.tremor_time_text)
-        self.threaded_tremor_test = Threaded_Tremor_Test(self.backend)
         
         self.thread_sentinel = Thread_Sentinel()
         
@@ -211,10 +201,11 @@ class StateMachine():
 
         self.ui.tremor_test_start_button.clicked.connect(partial(self.tremor_timer.timer_start))
         # enable if bluetooth available
-        self.ui.tremor_test_start_button.clicked.connect(self.threaded_tremor_test.start)
+        self.ui.tremor_test_start_button.clicked.connect(self.backend.bluetooth_handler.threaded_tremor_test.start)
         self.ui.tremor_test_start_button.clicked.connect(partial(self.set_state, TREMOR_TEST_STATE))
-        self.backend.bluetooth_handler.finished.connect(partial(self.backend.results_handler.set_tremor_data, self.backend.bluetooth_handler.tremor_frequency))
-        self.backend.bluetooth_handler.finished.connect(partial(self.set_state, TREMOR_FINISHED_STATE))
+        self.backend.bluetooth_handler.test_finished.connect(self.tremor_frequency_store)
+        self.tremor_frequency_ready.connect(partial(self.backend.results_handler.set_tremor_data, self.tremor_frequency_get))
+        self.backend.bluetooth_handler.test_finished.connect(partial(self.set_state, TREMOR_FINISHED_STATE))
 
         self.ui.tremor_next_button.clicked.connect(partial(self.set_state, QUESTIONNAIRE_STATE))
         self.ui.tremor_save_exit_button.clicked.connect(partial(self.set_state, TITLE_STATE))
@@ -222,8 +213,8 @@ class StateMachine():
         self.ui.questionnaire_complete_button.clicked.connect(partial(self.set_state, RESULT_STATE))
         self.ui.questionnaire_complete_button.clicked.connect(partial(self.backend.questionnaire_calculator.set_responses, self.ui.questionnaire_grouped_buttons))
         self.ui.questionnaire_complete_button.clicked.connect(partial(self.backend.questionnaire_calculator.calculate_score, self.ui.questionnaire_grouped_buttons))
-        self.ui.questionnaire_complete_button.clicked.connect(partial(self.backend.results_handler.set_questionnaire_data, self.backend.questionnaire_calculator.get_responses, self.backend.questionnaire_calculator.get_score))
-        self.ui.questionnaire_complete_button.clicked.connect(partial(self.ui.result_tremor_frequency_text.setText, str(self.backend.results_handler.tremor_frequency)))        
+        self.ui.questionnaire_complete_button.clicked.connect(partial(self.backend.results_handler.set_questionnaire_data, self.backend.questionnaire_calculator.get_responses(), self.backend.questionnaire_calculator.get_score()))
+        self.ui.questionnaire_complete_button.clicked.connect(self.set_results_page)        
 
         self.ui.result_next_button.clicked.connect(partial(self.set_state, COMPLETE_STATE))
 
@@ -246,6 +237,22 @@ class StateMachine():
         self.ui.tremor_pairing_start_button.setVisible(False)
         self.ui.tremor_pairing_continue_button.setVisible(status)
         self.ui.tremor_pairing_failed_button.setVisible(not(status))
-
+        
+    def tremor_frequency_store(self):
+        self.tremor_frequency = self.backend.bluetooth_handler.get_frequency()
+        self.tremor_frequency_ready.emit()
+        
+    def tremor_frequency_get(self):
+        return self.tremor_frequency
+    
+    def set_results_page(self):
+        self.ui.result_tremor_frequency_text.setText(str(self.backend.results_handler.tremor_frequency))
+        self.ui.result_questionnaire_q1.setText(self.ui.result_questionnaire_q1.text() + self.backend.results_handler.response1)
+        self.ui.result_questionnaire_q2.setText(self.ui.result_questionnaire_q2.text() + self.backend.results_handler.response2)
+        self.ui.result_questionnaire_q3.setText(self.ui.result_questionnaire_q3.text() + self.backend.results_handler.response3)
+        self.ui.result_questionnaire_q4.setText(self.ui.result_questionnaire_q4.text() + self.backend.results_handler.response4)
+        self.ui.result_questionnaire_q5.setText(self.ui.result_questionnaire_q5.text() + self.backend.results_handler.response5)
+        self.ui.result_questionnaire_q6.setText(self.ui.result_questionnaire_q6.text() + self.backend.results_handler.response6)
+        
     def debug_next_state(self):
         self.set_state((self.state.ID + 1) % STATE_COUNT)

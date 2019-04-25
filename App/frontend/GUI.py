@@ -632,6 +632,41 @@ class Ui_MainWindow(object):
         self.result_tremor_frequency_text = QLineEdit(result_layout_widget)
         self.result_tremor_frequency_text.setObjectName("result_tremor_frequency_text")
         result_layout.addWidget(self.result_tremor_frequency_text)
+        
+        result_questionnaire_title = QLineEdit(result_layout_widget)
+        result_questionnaire_title.setObjectName("result_questionnaire_title")
+        result_questionnaire_title.setText("Questionnaire Results: ")
+        result_layout.addWidget(result_questionnaire_title)
+        
+        self.result_questionnaire_q1 = QLineEdit(result_layout_widget)
+        self.result_questionnaire_q1.setObjectName("result_questionnaire_q1")
+        self.result_questionnaire_q1.setText("1. ")
+        result_layout.addWidget(self.result_questionnaire_q1)
+        
+        self.result_questionnaire_q2 = QLineEdit(result_layout_widget)
+        self.result_questionnaire_q2.setObjectName("result_questionnaire_q2")
+        self.result_questionnaire_q2.setText("2. ")
+        result_layout.addWidget(self.result_questionnaire_q2)
+        
+        self.result_questionnaire_q3 = QLineEdit(result_layout_widget)
+        self.result_questionnaire_q3.setObjectName("result_questionnaire_q3")
+        self.result_questionnaire_q3.setText("3. ")
+        result_layout.addWidget(self.result_questionnaire_q3)
+        
+        self.result_questionnaire_q4 = QLineEdit(result_layout_widget)
+        self.result_questionnaire_q4.setObjectName("result_questionnaire_q4")
+        self.result_questionnaire_q4.setText("4. ")
+        result_layout.addWidget(self.result_questionnaire_q4)
+        
+        self.result_questionnaire_q5 = QLineEdit(result_layout_widget)
+        self.result_questionnaire_q5.setObjectName("result_questionnaire_q5")
+        self.result_questionnaire_q5.setText("5. ")
+        result_layout.addWidget(self.result_questionnaire_q5)
+        
+        self.result_questionnaire_q6 = QLineEdit(result_layout_widget)
+        self.result_questionnaire_q6.setObjectName("result_questionnaire_q6")
+        self.result_questionnaire_q6.setText("6. ")
+        result_layout.addWidget(self.result_questionnaire_q6)
 
         self.result_next_button = QPushButton(result_layout_widget)
         self.result_next_button.setObjectName("result_next_button")

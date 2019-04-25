@@ -1,15 +1,11 @@
 import serial
-import time
 import queue
-# import cv2
-import numpy as np
-# from Homographer import *
-from threading import Thread
-from functools import partial
 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+
+import re
 
 class UART_Handler(QObject):
     point_ready = pyqtSignal()
@@ -45,8 +41,6 @@ class UART_Handler(QObject):
         
         self.put_queue_thread = self.PutQueueThread(self)
         self.get_queue_thread = self.GetQueueThread(self)
-        
-        # self.homographer = Homographer()
 
     def enable(self):
         self.ser.open()
@@ -89,10 +83,16 @@ class UART_Handler(QObject):
 
     def get_point(self):
         data = self.getData(9)
+        
+        match = re.match(r"(\d{4}),(\d{4})", data)
+        
+        if match == None:
+            match = re.match(r"(\d{0,4}),(\d{4})", data)
+            data += self.getData(9 - (4 - len(match.group(1))) )
+            match = re.search(r"(\d{4}),(\d{4})", data)
 
-        data = data.split(",")
-        data_x = int(data[0])
-        data_y = int(data[1])
+        data_x = int(match.group(1))
+        data_y = int(match.group(2))
             
         return (data_x, data_y)
     

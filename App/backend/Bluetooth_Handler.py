@@ -9,7 +9,15 @@ BT2 = "98:D3:31:FD:8B:99"
 BT4 = "98:D3:51:FD:86:88"
 
 class BluetoothHandler(QObject):
-    finished = pyqtSignal()
+    test_finished = pyqtSignal()
+    
+    class Threaded_Tremor_Test(QThread):
+        def __init__(self, parent):
+            super().__init__()
+            self.parent = parent
+    
+        def run(self):
+            self.parent.tremor_test()
     
     def __init__(self):
         super().__init__()
@@ -20,6 +28,7 @@ class BluetoothHandler(QObject):
         self.socket.connect((self.addr, self.port))
         self.socket.settimeout(5)
         
+        self.threaded_tremor_test = self.Threaded_Tremor_Test(self)
         self.tremor_frequency = None
 
     def getData(self, num_bytes):
@@ -65,14 +74,9 @@ class BluetoothHandler(QObject):
 
 
     def tremor_test(self):        
-        started = False
         result_ready = False
-        timeout = False
-        curr_time = int(time.time())
                 
         self.sendData("startnow")
-
-        #TODO: FIND SOURCE OF BLUETOOTH ERROR IN SPARE TIME
 
         data_str = ""
         while result_ready == False:
@@ -95,15 +99,20 @@ class BluetoothHandler(QObject):
         self.tremor_frequency = float(searches.group(1))
         print(self.tremor_frequency)
         
-        self.finished.emit()
+        self.test_finished.emit()
         
     def get_frequency(self):
         print(self.tremor_frequency)
         return self.tremor_frequency
 
 if __name__ == "__main__":
+    from functools import partial
+    def print_result(bt_handler):
+        print("final: " + str(bt_handler.tremor_frequency))
+        
     bt_handler = BluetoothHandler()
+    bt_handler.finished.connect(partial(print_result, bt_handler))
     status = bt_handler.pairing()
     print(status)
-    data = bt_handler.tremor_test()
-    print(data)
+    bt_handler.threaded_tremor_test.start()
+    

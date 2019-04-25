@@ -77,8 +77,6 @@ class Spiral_Painter(QWidget):
         if self.transform_device != None:
             transformed_point = self.transform_device.transform_coordinates([[point.x(), point.y(), 1]])
             
-            print("transformed point: " + str(transformed_point))
-            
             point = QPoint(transformed_point[0], transformed_point[1])
         
         if self.last_pos == None:
