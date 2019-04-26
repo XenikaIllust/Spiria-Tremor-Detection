@@ -4,15 +4,15 @@ import json
 import requests
 import os
 
-G_PROJECT_ID = "bold-ethos-235619"
-G_MODEL_ID = "ICN3286021728029437002"
+G_PROJECT_ID = "redacted"
+G_MODEL_ID = "redacted"
 
 SPIRIA_SERVER_ENDPOINT = "http://www.spiria.org/api/userdatas/"
 
 class Request_Handler():
     def __init__(self):
-        # subprocess.call(['export', 'GOOGLE_APPLICATION_CREDENTIALS="/home/pi/Desktop/ML-cc7141df989b.json"'], shell=True)
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = '/home/pi/Desktop/ML-cc7141df989b.json'
+        # subprocess.call(['export', 'GOOGLE_APPLICATION_CREDENTIALS="redacted"'], shell=True)
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = 'redacted'
         
         self.prediction_client = automl_v1beta1.PredictionServiceClient()
         self.project_id = G_PROJECT_ID
