@@ -22,18 +22,24 @@ class Integrated_Spiral_Painter(Spiral_Painter):
         
         self.uart_handler.point_ready.connect(self.add_point)
         self.uart_handler.run_threads()
+        self.set_paint_device(self.uart_handler)
         self.transform_device = Homographer()
-        self.transform_device.set_source_points([QPoint(0, 255), QPoint(1023, 255), QPoint(1023, 1023), QPoint(0, 1023)])
-        # self.transform_device.set_destination_points([[0, 0], [693, 0], [693, 660], [0, 660]])
-        self.transform_device.set_destination_points([self.geometry().topLeft(),
-                                                      self.geometry().topRight(),
-                                                      self.geometry().bottomRight(),
-                                                      self.geometry().bottomLeft()])
+        self.transform_device.set_source_points(self.give_source_points)
+        self.transform_device.set_destination_points(self.give_dest_points)
         self.transform_device.calculate_homography()
         
         self.points = []
         
         self.clicked = False
+        
+    def give_source_points(self):
+        return [QPoint(0, 255), QPoint(1023, 255), QPoint(1023, 1023), QPoint(0, 1023)]
+        
+    def give_dest_points(self):
+        return [self.geometry().topLeft(),
+                self.geometry().topRight(),
+                self.geometry().bottomRight(),
+                self.geometry().bottomLeft()]
         
     def paintEvent(self, event):
         self.canvas.pixmap().fill(Qt.transparent)
@@ -48,6 +54,9 @@ class Integrated_Spiral_Painter(Spiral_Painter):
                 cursor_painter.drawEllipse(point, 5, 5)
             cursor_painter.drawText(QPoint(self.geometry().left() + 10, self.geometry().top() + 10), "pos: " + str(self.curr_pos))
             cursor_painter.end()
+            
+        if len(self.points) == 200:
+            self.save_drawing()
     
         '''
         if self.last_pos != None:
@@ -60,31 +69,11 @@ class Integrated_Spiral_Painter(Spiral_Painter):
                 painter.drawLine(self.points[ind], self.points[ind+1])
             painter.end()
         '''
-    
-    def add_point(self):
-        point = self.uart_handler.curr_point
-        
-        if point == None:
-            return
-        
-        point = QPoint(point[0], 1023 - point[1])
-        print("unedited point: " + str(point))
-        transformed_point = self.transform_device.transform_coordinates([[point.x(), point.y(), 1]])
-        print(transformed_point)
-        point = QPoint(transformed_point[0], transformed_point[1])
-        print("edited point: " + str(point))
-        
-        if self.last_pos == None:
-            self.last_pos = point
-            
-        self.curr_pos = point
-        self.points.append(self.curr_pos)
-        self.update()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     integrated_spiral_painter = Integrated_Spiral_Painter()
-    # integrated_spiral_painter.setGeometry(0,0,693,660)
+    integrated_spiral_painter.setGeometry(0,0,693,660)
     # integrated_spiral_painter.setGeometry(0, 0, 1024, 768)
     integrated_spiral_painter.show()
     app.exec_()

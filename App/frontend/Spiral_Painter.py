@@ -46,16 +46,16 @@ class Spiral_Painter(QWidget):
             cursor_painter.pen().setWidth(100)
             cursor_painter.setPen(Qt.blue)
             cursor_painter.setBrush(Qt.blue)
-            cursor_painter.drawEllipse(self.curr_pos, 5, 5)
-            cursor_painter.drawText(QPoint(self.geometry().left() + 10, self.geometry().top() + 10), "pos: " + str(self.curr_pos))
+            for point in self.points:
+                cursor_painter.drawEllipse(point, 2.5, 2.5)
             cursor_painter.end()
-
+            
         if self.last_pos != None:
             self.points.append(self.last_pos)
             painter = QPainter()
             painter.begin(self.canvas.pixmap())
-            painter.pen().setWidth(10)
-            painter.setPen(Qt.blue)
+            painter.pen().setWidth(100)
+            painter.setPen(QPen(Qt.blue, 5, Qt.SolidLine))
             for ind in range(0, len(self.points)-1):
                 painter.drawLine(self.points[ind], self.points[ind+1])
             painter.end()
@@ -75,14 +75,15 @@ class Spiral_Painter(QWidget):
             try:
                 transformed_point = self.transform_device.transform_coordinates([point.x(), point.y()])
             
-                point = QPoint(transformed_point[0], transformed_point[1])
+                point = QPointF(transformed_point[0], transformed_point[1])
             except:
                 point = QPoint()
                 
         if point.x() == 0 and point.y() == 0:
             return
         
-        if point.x() < self.geometry().left() or point.x() > self.geometry().right() or point.y() < self.geometry().top() or point.y() > self.geometry().bottom():
+        if point.x() < 0 or point.x() > self.width() or point.y() < 0 or point.y() > self.height():
+            print(self.geometry())
             return
         
         if self.last_pos == None:
@@ -93,6 +94,9 @@ class Spiral_Painter(QWidget):
         self.curr_pos = point
         self.points.append(self.curr_pos)
         self.update()
+        
+    def save_drawing(self):
+        self.canvas.pixmap().save("./spiral.png", "png", 100)
         
     def reset_drawing(self):
         self.last_pos = None

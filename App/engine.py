@@ -188,6 +188,7 @@ class StateMachine(QObject):
         
         self.ui.spiral_painter.set_paint_device(self.backend.uart_handler)
         self.ui.spiral_painter.set_transform_device(self.backend.homographer)
+        self.ui.spiral_test_next_button.clicked.connect(self.ui.spiral_painter.save_drawing)
         self.ui.spiral_test_next_button.clicked.connect(partial(self.set_state, SPIRAL_FINISHED_STATE))
 
         # enable if BT not available
