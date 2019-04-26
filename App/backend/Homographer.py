@@ -52,9 +52,7 @@ class Homographer():
         if self.H is not None:
             try:
                 pt = np.array([[[pt_src[0], pt_src[1]]]], dtype=np.float32)
-                print(pt, pt.shape)
                 result = cv2.perspectiveTransform(pt, self.H)
-                print(result)
                 pt_dest = [result[0][0][0], result[0][0][1]]
             
                 return pt_dest
@@ -64,7 +62,7 @@ class Homographer():
         else:
             return [pt_src[0], pt_src[1]]
         
-    def reset_homography(self):
+    def reset(self):
         self.src0 = None
         self.src1 = None
         self.src2 = None

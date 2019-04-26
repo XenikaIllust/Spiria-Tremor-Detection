@@ -99,8 +99,7 @@ class BluetoothHandler(QObject):
         
         self.test_finished.emit()
         
-    def get_frequency(self):
-        print(self.tremor_frequency)
+    def get_tremor_frequency(self):
         return self.tremor_frequency
 
 if __name__ == "__main__":

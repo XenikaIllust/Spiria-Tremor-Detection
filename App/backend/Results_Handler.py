@@ -1,11 +1,12 @@
+import uuid
 import json
 import cv2
+import datetime
 
 class Results_Handler():
     def __init__(self):
         self.userid = None
-        self.age = None
-        self.spiral_image = None
+        self.age = 80
         self.tremor_frequency = None
         self.tremor_bool = None
         self.questionnaire_score = None
@@ -17,12 +18,16 @@ class Results_Handler():
         self.response4 = None
         self.response5 = None
         self.response6 = None
+        self.overall_prediction = None
         
-    def set_spiral_image(self, spiral_points):
-        pass
+    def set_userid(self):
+        self.userid = uuid.uuid4()
+        
+    def set_date(self):
+        self.date = datetime.datetime.today().strftime('%Y-%m-%d')
     
-    def set_spiral_prediction(self, spiral_prediction):
-        pass
+    def set_spiral_prediction(self, spiral_predict_function):
+        self.spiral_prediction = spiral_predict_function().payload[0].classification.score
         
     def set_tremor_data(self, frequency_function):
         self.tremor_frequency = frequency_function()
@@ -46,13 +51,31 @@ class Results_Handler():
         self.response5 = questionnaire_results[4]
         self.response6 = questionnaire_results[5]
         
-    def to_json(self):
-        pass
+    def calculate_overall_prediction(self):
+        self.overall_prediction = self.spiral_prediction * 0.2 + int(self.tremor_bool) * 0.5 + self.questionnaire_score * 0.3
+        
+    def get_results(self):
+        return {
+                'userid': self.userid,
+                'age': self.age,
+                'spiral': '',
+                'spiral_test': self.spiral_prediction,
+                'tremor': self.tremor_frequency,
+                'tremor_test': self.tremor_bool,
+                'questionnaire': self.questionnaire_score,
+                'response1': self.response1,
+                'response2': self.response2,
+                'response3': self.response3,
+                'response4': self.response4,
+                'response5': self.response5,
+                'response6': self.response6,
+                'prediction': self.overall_prediction,
+                'date': self.date
+                }
     
     def reset(self):
         self.userid = None
         self.age = None
-        self.spiral_image = None
         self.tremor_frequency = None
         self.tremor_bool = None
         self.questionnaire_score = None
@@ -64,3 +87,4 @@ class Results_Handler():
         self.response4 = None
         self.response5 = None
         self.response6 = None
+        self.overall_prediction = None

@@ -22,3 +22,7 @@ class Questionnaire_Calculator():
     
     def get_responses(self):
         return self.responses
+    
+    def reset(self):
+        self.score = 0
+        self.responses = []

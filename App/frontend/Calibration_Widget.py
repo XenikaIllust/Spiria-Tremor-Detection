@@ -90,13 +90,6 @@ class Calibration_Widget(QWidget):
         painter.end()
         self.update()
 
-    def mousePressEvent(self, event):
-        if self.count < 4:
-            self.curr_pos = event.pos()
-            self.points.append(self.curr_pos)
-            self.count += 1
-            self.update()
-
 if __name__ == "__main__":
     import sys
     app = QApplication(sys.argv)

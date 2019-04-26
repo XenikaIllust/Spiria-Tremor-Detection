@@ -83,7 +83,6 @@ class Spiral_Painter(QWidget):
             return
         
         if point.x() < 0 or point.x() > self.width() or point.y() < 0 or point.y() > self.height():
-            print(self.geometry())
             return
         
         if self.last_pos == None:
@@ -96,12 +95,16 @@ class Spiral_Painter(QWidget):
         self.update()
         
     def save_drawing(self):
-        self.canvas.pixmap().save("./spiral.png", "png", 100)
+        filename = "./spiral.jpg"
+        print("saved at " + filename)
+        self.canvas.pixmap().save(filename, "jpg", 100)
         
     def reset_drawing(self):
         self.last_pos = None
         self.curr_pos = None
         self.points = []
+        self.canvas_pixmap.fill(Qt.transparent)
+        self.update()
 
 if __name__ == '__main__':
     import sys

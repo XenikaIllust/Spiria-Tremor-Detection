@@ -21,6 +21,9 @@ class BackendServices():
         self.questionnaire_calculator = Questionnaire_Calculator()
         
         self.results_handler = Results_Handler()
+        self.request_handler = Request_Handler()
 
-    def update(self, state):
-        pass
+    def reset(self):
+        self.homographer.reset()
+        self.questionnaire_calculator.reset() 
+        self.results_handler.reset()

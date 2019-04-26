@@ -21,6 +21,8 @@ COMPLETE_STATE = 11
 
 STATE_COUNT = 12
 
+SPIRAL_FILENAME = "./spiral.jpg"
+
 class Thread_Sentinel(QObject):
     run_threads = pyqtSignal()
     kill_threads = pyqtSignal()
@@ -104,8 +106,6 @@ class State():
         self.kill_function = kill_function
 
 class StateMachine(QObject):
-    tremor_frequency_ready = pyqtSignal()
-    
     def __init__(self, ui, backend):
         super().__init__()
         self.ui = ui
@@ -147,8 +147,6 @@ class StateMachine(QObject):
         self.state = None
         self.set_state(TITLE_STATE)
 
-        self.paired = False
-
     def set_state(self, state_id):
         self.thread_sentinel.kill_all_threads()
         self.thread_sentinel.disconnect()
@@ -188,6 +186,7 @@ class StateMachine(QObject):
         
         self.ui.spiral_painter.set_paint_device(self.backend.uart_handler)
         self.ui.spiral_painter.set_transform_device(self.backend.homographer)
+        self.ui.spiral_test_reset_button.clicked.connect(self.ui.spiral_painter.reset_drawing)
         self.ui.spiral_test_next_button.clicked.connect(self.ui.spiral_painter.save_drawing)
         self.ui.spiral_test_next_button.clicked.connect(partial(self.set_state, SPIRAL_FINISHED_STATE))
 
@@ -203,8 +202,7 @@ class StateMachine(QObject):
         # enable if bluetooth available
         self.ui.tremor_test_start_button.clicked.connect(self.backend.bluetooth_handler.threaded_tremor_test.start)
         self.ui.tremor_test_start_button.clicked.connect(partial(self.set_state, TREMOR_TEST_STATE))
-        self.backend.bluetooth_handler.test_finished.connect(self.tremor_frequency_store)
-        self.tremor_frequency_ready.connect(partial(self.backend.results_handler.set_tremor_data, self.tremor_frequency_get))
+        self.backend.bluetooth_handler.test_finished.connect(partial(self.backend.results_handler.set_tremor_data, self.backend.bluetooth_handler.get_tremor_frequency))
         self.backend.bluetooth_handler.test_finished.connect(partial(self.set_state, TREMOR_FINISHED_STATE))
 
         self.ui.tremor_next_button.clicked.connect(partial(self.set_state, QUESTIONNAIRE_STATE))
@@ -216,6 +214,12 @@ class StateMachine(QObject):
         self.ui.questionnaire_complete_button.clicked.connect(partial(self.backend.results_handler.set_questionnaire_data, self.backend.questionnaire_calculator.get_responses(), self.backend.questionnaire_calculator.get_score()))
         self.ui.questionnaire_complete_button.clicked.connect(self.set_results_page)        
 
+        self.ui.result_next_button.clicked.connect(self.backend.results_handler.set_userid)
+        self.ui.result_next_button.clicked.connect(self.backend.results_handler.set_date)
+        self.ui.result_next_button.clicked.connect(partial(self.backend.results_handler.set_spiral_prediction,
+                                                           partial(self.backend.request_handler.get_google_prediction, SPIRAL_FILENAME)))
+        self.ui.result_next_button.clicked.connect(self.backend.results_handler.calculate_overall_prediction)
+        self.ui.result_next_button.clicked.connect(partial(self.backend.request_handler.post_to_webserver, self.backend.results_handler.get_results, SPIRAL_FILENAME))
         self.ui.result_next_button.clicked.connect(partial(self.set_state, COMPLETE_STATE))
 
         self.ui.complete_button.clicked.connect(partial(self.set_state, TITLE_STATE))
@@ -238,13 +242,15 @@ class StateMachine(QObject):
         self.ui.tremor_pairing_start_button.setVisible(False)
         self.ui.tremor_pairing_continue_button.setVisible(status)
         self.ui.tremor_pairing_failed_button.setVisible(not(status))
-        
+    
+    '''
     def tremor_frequency_store(self):
-        self.tremor_frequency = self.backend.bluetooth_handler.get_frequency()
+        self.tremor_frequency = self.backend.bluetooth_handler.get_tremor_frequency()
         self.tremor_frequency_ready.emit()
         
     def tremor_frequency_get(self):
         return self.tremor_frequency
+    '''
     
     def set_results_page(self):
         self.ui.result_tremor_frequency_text.setText(str(self.backend.results_handler.tremor_frequency))
@@ -256,7 +262,10 @@ class StateMachine(QObject):
         self.ui.result_questionnaire_q6.setText(self.ui.result_questionnaire_q6.text() + self.backend.results_handler.response6)
         
     def reset(self):
-        pass
+        self.ui.reset()
+        self.backend.reset()
+        self.tremor_timer.reset()
+        self.set_actions()
         
     def debug_next_state(self):
         self.set_state((self.state.ID + 1) % STATE_COUNT)

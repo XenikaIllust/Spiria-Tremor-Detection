@@ -178,16 +178,17 @@ class Ui_MainWindow(object):
 
     def setup_title_screen(self):
         title_widget = QWidget(self.title_screen)
-        title_widget.setGeometry(QRect(self.frame.geometry().width() // 3, self.frame.geometry().height() * 0.1, self.frame.geometry().width() // 3, self.frame.geometry().height() * 0.8))
+        # title_widget.setGeometry(QRect(self.frame.geometry().width() // 3, self.frame.geometry().height() * 0.1, self.frame.geometry().width() // 3, self.frame.geometry().height() * 0.8))
         title_widget.setObjectName("title_layout_widget")
+        title_widget.resize(self.frame.size())
 
         title_layout = QVBoxLayout(title_widget)
+        title_layout.setAlignment(Qt.AlignCenter)
 
         pixmap = QPixmap("./assets/images/logo.png")
         logo = QLabel(title_widget)
         logo.setObjectName("logo")
-        logo.resize(title_widget.size())
-        logo.setPixmap(pixmap.scaled(logo.width(), logo.height(), Qt.KeepAspectRatio))
+        logo.setPixmap(pixmap)
         title_layout.addWidget(logo)
 
         self.start_button = QPushButton(title_widget)
@@ -250,12 +251,19 @@ class Ui_MainWindow(object):
         spiral_test_text_layout.addWidget(spiral_test_title)
         spiral_test_text_layout.addWidget(spiral_test_text)
         
+        self.spiral_test_reset_button = QPushButton()
+        self.spiral_test_reset_button.setText("Reset Drawing")
+        
         self.spiral_test_next_button = QPushButton()
         self.spiral_test_next_button.setText("Next")
         
+        spiral_test_button_layout = QVBoxLayout()
+        spiral_test_button_layout.addWidget(self.spiral_test_reset_button)
+        spiral_test_button_layout.addWidget(self.spiral_test_next_button)
+        
         spiral_test_header_layout = QHBoxLayout()
         spiral_test_header_layout.addLayout(spiral_test_text_layout)
-        spiral_test_header_layout.addWidget(self.spiral_test_next_button)
+        spiral_test_header_layout.addLayout(spiral_test_button_layout)
 
         self.spiral_painter = Spiral_Painter()
         self.spiral_painter.setObjectName("spiral_painter")
@@ -432,14 +440,17 @@ class Ui_MainWindow(object):
         question1_layout.addLayout(question1_buttonlayout)
 
         question1_button0 = QRadioButton()
+        question1_button0.setObjectName("q1b0")
         question1_button0.setText("Yes")
         question1_button0.setChecked(False)
 
         question1_button1 = QRadioButton()
+        question1_button1.setObjectName("q1b1")
         question1_button1.setText("Unsure")
         question1_button1.setChecked(False)
 
         question1_button2 = QRadioButton()
+        question1_button2.setObjectName("q1b2")
         question1_button2.setText("No")
         question1_button2.setChecked(True)
         
@@ -720,6 +731,21 @@ class Ui_MainWindow(object):
                 self.tremor_pairing_start_button.setVisible(True)
                 self.tremor_pairing_continue_button.setVisible(False)
                 self.tremor_pairing_failed_button.setVisible(False)
+                
+    def reset(self):
+        self.setup_calibration_screen()
+        self.setup_title_screen()
+        self.setup_spiral_pairing_screen()
+        self.setup_spiral_test_screen()
+        self.setup_spiral_test_complete_screen(self.spiral_complete_test_screen)
+        self.setup_tremor_pairing_screen()
+        self.tremor_test_start_screen.setGeometry(self.frame.geometry())
+        self.setup_tremor_test_start_screen()
+        self.setup_tremor_test_screen()
+        self.setup_tremor_test_complete_screen(self.tremor_complete_test_screen)
+        self.setup_questionnaire_screen()
+        self.setup_result_screen()
+        self.setup_complete_screen()
 
     def debug_flip_page(self):
         self.set_screen((self.stacked_widget.currentIndex() + 1) % PAGE_COUNT)
