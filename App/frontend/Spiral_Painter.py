@@ -18,9 +18,6 @@ class Spiral_Painter(QWidget):
         self.transform_device = None
 
     def setup_ui(self):
-        # palette = QPalette()
-        # palette.setBrush(QPalette.Background, QBrush(QPixmap("../assets/images/logo.png").scaled(self.width(), self.height(), Qt.KeepAspectRatio)))
-        # self.setPalette(palette)
         self.pixmap = QPixmap("assets/images/template.jpg")
         self.resize(self.pixmap.width(), self.pixmap.height())
         self.image = QLabel(self)
@@ -75,16 +72,32 @@ class Spiral_Painter(QWidget):
             point = QPoint(point[0], 1023 - point[1] - 255)
         
         if self.transform_device != None:
-            transformed_point = self.transform_device.transform_coordinates([[point.x(), point.y(), 1]])
+            try:
+                transformed_point = self.transform_device.transform_coordinates([point.x(), point.y()])
             
-            point = QPoint(transformed_point[0], transformed_point[1])
+                point = QPoint(transformed_point[0], transformed_point[1])
+            except:
+                point = QPoint()
+                
+        if point.x() == 0 and point.y() == 0:
+            return
+        
+        if point.x() < self.geometry().left() or point.x() > self.geometry().right() or point.y() < self.geometry().top() or point.y() > self.geometry().bottom():
+            return
         
         if self.last_pos == None:
             self.last_pos = point
+        else:
+            self.last_pos = self.curr_pos
             
         self.curr_pos = point
-        # self.points.append(self.curr_pos)
+        self.points.append(self.curr_pos)
         self.update()
+        
+    def reset_drawing(self):
+        self.last_pos = None
+        self.curr_pos = None
+        self.points = []
 
 if __name__ == '__main__':
     import sys

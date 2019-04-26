@@ -22,15 +22,21 @@ class Homographer():
             points.append(point)
         return points
 
-    def set_source_points(self, pts_src):
+    def set_source_points(self, src_func):
+        pts_src = src_func()
+        
         if type(pts_src[0]) != np.ndarray:
             pts_src = self.qpoints_to_array(pts_src)
+        print(pts_src)    
+        
         self.src0 = pts_src[0]
         self.src1 = pts_src[1]
         self.src2 = pts_src[2]
         self.src3 = pts_src[3]
 
-    def set_destination_points(self, pts_dst):
+    def set_destination_points(self, dst_func):
+        pts_dst = dst_func()
+        
         if type(pts_dst[0]) != np.ndarray:
             pts_dst = self.qpoints_to_array(pts_dst)
         self.dest0 = pts_dst[0]
@@ -44,13 +50,19 @@ class Homographer():
 
     def transform_coordinates(self, pt_src):
         if self.H is not None:
-            result = np.matmul(pt_src, self.H)
-            # pt_dest = [result[0][0]/abs(result[0][2]), result[0][1]/abs(result[0][2])]
-            pt_dest = [abs(result[0][0]), abs(result[0][1])]
+            try:
+                pt = np.array([[[pt_src[0], pt_src[1]]]], dtype=np.float32)
+                print(pt, pt.shape)
+                result = cv2.perspectiveTransform(pt, self.H)
+                print(result)
+                pt_dest = [result[0][0][0], result[0][0][1]]
             
-            return pt_dest
+                return pt_dest
+            except Exception as e:
+                print(e)
+                raise ValueError("invalid point")
         else:
-            return [pt_src[0][0], pt_src[0][1]]
+            return [pt_src[0], pt_src[1]]
         
     def reset_homography(self):
         self.src0 = None

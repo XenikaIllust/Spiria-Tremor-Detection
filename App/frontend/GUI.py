@@ -235,24 +235,36 @@ class Ui_MainWindow(object):
     def setup_spiral_test_screen(self):
         spiral_test_layout_widget = QWidget(self.spiral_test_screen)
         spiral_test_layout_widget.resize(self.spiral_test_screen.size())
-
-        spiral_test_layout = QVBoxLayout(spiral_test_layout_widget)
-
-        spiral_test_title = QLineEdit(spiral_test_layout_widget)
+    
+        spiral_test_title = QLineEdit()
         spiral_test_title.setObjectName("spiral_test_title")
         spiral_test_title.setText("Spiral Drawing Test")
         spiral_test_title.setReadOnly(True)
-        spiral_test_layout.addWidget(spiral_test_title)
 
-        spiral_test_text = QLineEdit(spiral_test_layout_widget)
+        spiral_test_text = QLineEdit()
         spiral_test_text.setObjectName("spiral_test_text")
-        spiral_test_text.setText("Use the IR Pen to trace the spiral in the white area.")
+        spiral_test_text.setText("Use the IR Pen to trace the spiral in the white area. Press \"Next\" when finished.")
         spiral_test_text.setReadOnly(True)
-        spiral_test_layout.addWidget(spiral_test_text)
+        
+        spiral_test_text_layout = QVBoxLayout()
+        spiral_test_text_layout.addWidget(spiral_test_title)
+        spiral_test_text_layout.addWidget(spiral_test_text)
+        
+        self.spiral_test_next_button = QPushButton()
+        self.spiral_test_next_button.setText("Next")
+        
+        spiral_test_header_layout = QHBoxLayout()
+        spiral_test_header_layout.addLayout(spiral_test_text_layout)
+        spiral_test_header_layout.addWidget(self.spiral_test_next_button)
 
-        self.spiral_painter = Spiral_Painter(spiral_test_layout_widget)
+        self.spiral_painter = Spiral_Painter()
         self.spiral_painter.setObjectName("spiral_painter")
+        
+        spiral_test_layout = QVBoxLayout()
+        spiral_test_layout.addLayout(spiral_test_header_layout)
         spiral_test_layout.addWidget(self.spiral_painter)
+        
+        spiral_test_layout_widget.setLayout(spiral_test_layout)
 
     def setup_tremor_pairing_screen(self):
         tremor_pairing_layout_widget = QWidget(self.tremor_pairing_screen)

@@ -62,15 +62,17 @@ class Calibration_Widget(QWidget):
         
         if len(self.points) > 0 and distance(point, self.points[len(self.points) - 1]) < 100:
             return
-        
-        print(self.points)
-        print(len(self.points))
 
         if self.count < 4:
             self.curr_pos = point
             self.points.append(self.curr_pos)
             self.count += 1
+            print(len(self.points))
+            print(self.points)
             self.update()
+            
+    def get_points(self):
+        return self.points
             
     def points_to_array(self):
         return [[self.points[0][0], self.points[0][1]],

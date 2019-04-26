@@ -32,10 +32,8 @@ class BluetoothHandler(QObject):
         self.tremor_frequency = None
 
     def getData(self, num_bytes):
-            r_data = self.socket.recv(num_bytes)
-            # r_data = r_data.decode("utf-8") # convert bytes object to string
-            print(r_data)
-            return r_data
+        r_data = self.socket.recv(num_bytes)
+        return r_data
 
     def sendData(self, t_data):
         self.socket.send(t_data)

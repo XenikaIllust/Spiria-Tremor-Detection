@@ -52,7 +52,6 @@ class Thread_Sentinel(QObject):
                 self.kill_threads.connect(kill_function)
                 print(str(kill_function) + "connected")
             except Exception as e:
-                print(e)
                 pass
         
     def disconnect(self):
@@ -60,7 +59,6 @@ class Thread_Sentinel(QObject):
             self.run_threads.disconnect()
             self.kill_threads.disconnect()
         except Exception as e:
-            print(e)
             pass        
         
     def run_all_threads(self):
@@ -182,14 +180,15 @@ class StateMachine(QObject):
         self.ui.spiral_save_exit_button.clicked.connect(partial(self.set_state, TITLE_STATE))
         
         self.ui.calibration_reset_button.clicked.connect(self.ui.calibration_aid_widget.reset_points)
-        self.ui.calibration_confirm_button.clicked.connect(partial(self.backend.homographer.set_source_points, self.ui.calibration_aid_widget.points))
-        self.ui.calibration_confirm_button.clicked.connect(partial(self.backend.homographer.set_destination_points, self.ui.spiral_painter.get_edge_points()))
+        self.ui.calibration_confirm_button.clicked.connect(partial(self.backend.homographer.set_source_points, self.ui.calibration_aid_widget.get_points))
+        self.ui.calibration_confirm_button.clicked.connect(partial(self.backend.homographer.set_destination_points, self.ui.spiral_painter.get_edge_points))
         self.ui.calibration_confirm_button.clicked.connect(self.backend.homographer.calculate_homography)
+        self.ui.calibration_confirm_button.clicked.connect(self.ui.spiral_painter.reset_drawing)
         self.ui.calibration_confirm_button.clicked.connect(partial(self.set_state, SPIRAL_TEST_STATE))
-        self.ui.calibration_confirm_button.clicked.connect(print, self.backend.uart_handler.stop)
         
         self.ui.spiral_painter.set_paint_device(self.backend.uart_handler)
         self.ui.spiral_painter.set_transform_device(self.backend.homographer)
+        self.ui.spiral_test_next_button.clicked.connect(partial(self.set_state, SPIRAL_FINISHED_STATE))
 
         # enable if BT not available
         # self.ui.tremor_pairing_start_button.clicked.connect(partial(self.set_state, TREMOR_TEST_START_STATE))
@@ -219,6 +218,7 @@ class StateMachine(QObject):
         self.ui.result_next_button.clicked.connect(partial(self.set_state, COMPLETE_STATE))
 
         self.ui.complete_button.clicked.connect(partial(self.set_state, TITLE_STATE))
+        self.ui.complete_button.clicked.connect(self.reset)
 
         self.ui.debug_next_button.clicked.connect(self.ui.debug_flip_page)
         self.ui.debug_next_button.clicked.connect(self.debug_next_state)
@@ -253,6 +253,9 @@ class StateMachine(QObject):
         self.ui.result_questionnaire_q4.setText(self.ui.result_questionnaire_q4.text() + self.backend.results_handler.response4)
         self.ui.result_questionnaire_q5.setText(self.ui.result_questionnaire_q5.text() + self.backend.results_handler.response5)
         self.ui.result_questionnaire_q6.setText(self.ui.result_questionnaire_q6.text() + self.backend.results_handler.response6)
+        
+    def reset(self):
+        pass
         
     def debug_next_state(self):
         self.set_state((self.state.ID + 1) % STATE_COUNT)

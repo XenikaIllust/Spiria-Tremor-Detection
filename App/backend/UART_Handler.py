@@ -88,8 +88,12 @@ class UART_Handler(QObject):
         
         if match == None:
             match = re.match(r"(\d{0,4}),(\d{4})", data)
-            data += self.getData(9 - (4 - len(match.group(1))) )
-            match = re.search(r"(\d{4}),(\d{4})", data)
+            
+            try:
+                data += self.getData(9 - (4 - len(match.group(1))) )
+                match = re.search(r"(\d{4}),(\d{4})", data)
+            except:
+                return (-1, -1)
 
         data_x = int(match.group(1))
         data_y = int(match.group(2))
